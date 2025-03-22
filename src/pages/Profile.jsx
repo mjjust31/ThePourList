@@ -1,5 +1,5 @@
 import React from "react";
-import DrinkSwitcher from "../components/DrinkSwitcher";
+import DrinkSwitcher from "../components/home/DrinkSwitcher";
 
 export default function Profile() {
   return (

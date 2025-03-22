@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useDrink } from "../contexts/DrinkContext"; // Import the context
-import { capitalizeFirstLetter } from "../helpers/stringHelpers";
-
-// FontAwesome Icon import (now correctly added)
+import { useDrink } from "../../contexts/DrinkContext"; // Import the context
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 export default function NavBar() {
   const { drinkType } = useDrink();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const drinkName = capitalizeFirstLetter(drinkType);
 
   // Toggle menu open/close
   const toggleMenu = () => {
@@ -23,7 +19,6 @@ export default function NavBar() {
       <nav className="flex justify-between items-center p-4 bg-gray-800 text-white fixed top-0 left-0 right-0 z-50">
         {/* Notification Icon */}
         <div className="relative">
-          {/* Notification Bell Icon */}
           <button className="text-white text-xl">
             <FontAwesomeIcon icon={faBell} />
             <span className="absolute top-0 right-0 text-xs bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
@@ -34,8 +29,7 @@ export default function NavBar() {
 
         <Link
           to="/"
-          className="text-xl font-semibold text-white flex items-center gap-2"
-        >
+          className="text-xl font-semibold text-white flex items-center gap-2">
           🍷 <span>RankMyPour</span>
         </Link>
 
@@ -45,10 +39,10 @@ export default function NavBar() {
         </button>
       </nav>
 
-      {/* Faded Overlay */}
+      {/* Faded Overlay (semi-transparent to allow background to be seen) */}
       {isMenuOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="fixed inset-0 bg-gray-900 bg-opacity-30 z-40"
           onClick={toggleMenu}
         />
       )}
@@ -63,36 +57,36 @@ export default function NavBar() {
           </div>
 
           {/* Menu Items */}
+
           <div className="flex flex-col p-6 space-y-4">
+            <Link to="/" className="hover:text-yellow-400" onClick={toggleMenu}>
+              Home
+            </Link>
             <Link
               to="/profile"
               className="hover:text-yellow-400"
-              onClick={toggleMenu}
-            >
-              My {drinkName} Profile
+              onClick={toggleMenu}>
+              My {drinkType ? `${drinkType}` : "Drink"} Profile
             </Link>
 
             <Link
               to="/tasting"
               className="hover:text-yellow-400"
-              onClick={toggleMenu}
-            >
-              Single {drinkName} Tasting
+              onClick={toggleMenu}>
+              Single {drinkType ? `${drinkType}` : "Drink"} Tasting
             </Link>
 
             <Link
               to="/multi-tasting"
               className="hover:text-yellow-400"
-              onClick={toggleMenu}
-            >
-              {drinkName} Showdown
+              onClick={toggleMenu}>
+              {drinkType ? `${drinkType}` : "Drink"} Showdown
             </Link>
 
             <Link
               to="/events"
               className="hover:text-yellow-400"
-              onClick={toggleMenu}
-            >
+              onClick={toggleMenu}>
               My Events
             </Link>
           </div>

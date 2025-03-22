@@ -4,7 +4,7 @@ import "./index.css";
 import React from "react";
 import Home from "./pages/Home";
 import Tasting from "./pages/SingleTasting";
-import NavBar from "./components/NavBar";
+import NavBar from "./components/navigation/NavBar";
 import Profile from "./pages/Profile";
 import Showdown from "./pages/ShowdownTasting";
 
