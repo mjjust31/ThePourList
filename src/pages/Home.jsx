@@ -23,19 +23,37 @@ export default function Home() {
   };
 
   return (
-    <div className="home-page">
-      <h1>Welcome to RankMyPour 🍷</h1>
-      <p>Begin your tasting journey</p>
+    <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-800 text-white">
+      <h1 className="text-4xl font-semibold mb-6 text-yellow-300">Welcome to RankMyPour 🍷</h1>
+      <p className="text-xl mb-8 text-green-400">Begin your tasting journey</p>
+
       {!drinkType ? (
         // Display drink selection buttons
         <DrinkSwitcher onDrinkSelect={handleDrinkSelection} />
       ) : (
         // After selecting drink type, ask how many bottles they're trying
-        <div className="bottle-count">
-          <p>How many bottles are you trying today?</p>
-          <button onClick={() => handleBottleCountSelection(1)}>1 Bottle</button>
-          <button onClick={() => handleBottleCountSelection(2)}>2 Bottles</button>
-          <button onClick={() => handleBottleCountSelection(3)}>3 Bottles</button>
+        <div className="bottle-count p-6 bg-white rounded-lg shadow-lg w-full max-w-sm">
+          <p className="text-xl text-blue-600 mb-4">How many bottles are you trying today?</p>
+          <div className="flex space-x-4">
+            <button
+              onClick={() => handleBottleCountSelection(1)}
+              className="bg-red-600 text-white px-6 py-2 rounded-lg transition duration-300 hover:bg-red-700"
+            >
+              1 Bottle
+            </button>
+            <button
+              onClick={() => handleBottleCountSelection(2)}
+              className="bg-yellow-600 text-white px-6 py-2 rounded-lg transition duration-300 hover:bg-yellow-700"
+            >
+              2 Bottles
+            </button>
+            <button
+              onClick={() => handleBottleCountSelection(3)}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-300 hover:bg-blue-700"
+            >
+              3 Bottles
+            </button>
+          </div>
         </div>
       )}
     </div>

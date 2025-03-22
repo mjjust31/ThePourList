@@ -1,125 +1,103 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useDrink } from "../contexts/DrinkContext";
+import { useDrink } from "../contexts/DrinkContext"; // Import the context
 import { capitalizeFirstLetter } from "../helpers/stringHelpers";
+
+// FontAwesome Icon import (now correctly added)
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 export default function NavBar() {
   const { drinkType } = useDrink();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const drinkName = capitalizeFirstLetter(drinkType);
+
+  // Toggle menu open/close
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
 
   return (
     <>
       {/* Nav Container */}
-      <nav className="bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center">
-        <div className="text-sm text-gray-500">Welcome, User</div>
+      <nav className="flex justify-between items-center p-4 bg-gray-800 text-white fixed top-0 left-0 right-0 z-50">
+        {/* Notification Icon */}
+        <div className="relative">
+          {/* Notification Bell Icon */}
+          <button className="text-white text-xl">
+            <FontAwesomeIcon icon={faBell} />
+            <span className="absolute top-0 right-0 text-xs bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
+              3
+            </span>
+          </button>
+        </div>
 
         <Link
           to="/"
-          className="text-xl font-semibold text-gray-800 flex items-center gap-1"
+          className="text-xl font-semibold text-white flex items-center gap-2"
         >
           🍷 <span>RankMyPour</span>
         </Link>
 
         {/* Hamburger Button */}
-        <button
-          className="text-gray-600 lg:hidden"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            {isMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
+        <button onClick={toggleMenu} className="lg:hidden text-white">
+          {isMenuOpen ? "X" : "☰"}
         </button>
       </nav>
 
-      {/* Overlay */}
+      {/* Faded Overlay */}
       {isMenuOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-40"
-          onClick={() => setIsMenuOpen(false)}
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={toggleMenu}
         />
       )}
 
       {/* Offcanvas Menu */}
-      <div
-        className={`fixed top-0 right-0 h-full w-64 z-50 transform transition-transform duration-300 ease-in-out ${
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
-        } bg-[#8b9d70] bg-[url('https://www.transparenttextures.com/patterns/wine-cork.png')] bg-repeat bg-auto bg-blend-multiply text-[#fffaf5]`}
-      >
-        {/* Header */}
-        <div className="flex justify-between items-center px-5 py-4 border-b border-[#e2d3d3] bg-gradient-to-r from-[#fff0f5] to-[#f7e9ec] text-burgundy">
-          <h2 className="font-serif text-xl pl-5">Menu</h2>
-          <button
-            onClick={() => setIsMenuOpen(false)}
-            className="[filter:hue-rotate(300deg)]"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+      {isMenuOpen && (
+        <div className="fixed top-0 right-0 h-full w-64 z-50 bg-gray-700 text-white">
+          {/* Menu Header */}
+          <div className="flex justify-between items-center p-4 bg-gray-600">
+            <h2>Menu</h2>
+            <button onClick={toggleMenu}>Close</button>
+          </div>
+
+          {/* Menu Items */}
+          <div className="flex flex-col p-6 space-y-4">
+            <Link
+              to="/profile"
+              className="hover:text-yellow-400"
+              onClick={toggleMenu}
+            >
+              My {drinkName} Profile
+            </Link>
+
+            <Link
+              to="/tasting"
+              className="hover:text-yellow-400"
+              onClick={toggleMenu}
+            >
+              Single {drinkName} Tasting
+            </Link>
+
+            <Link
+              to="/multi-tasting"
+              className="hover:text-yellow-400"
+              onClick={toggleMenu}
+            >
+              {drinkName} Showdown
+            </Link>
+
+            <Link
+              to="/events"
+              className="hover:text-yellow-400"
+              onClick={toggleMenu}
+            >
+              My Events
+            </Link>
+          </div>
         </div>
-
-        {/* Menu Items */}
-        <div className="flex flex-col p-8 space-y-3">
-          <Link
-            to="/profile"
-            className="text-[#fffaf0] text-[1.1rem] mb-4 px-4 py-2 rounded-[10px] transition-all duration-300 hover:bg-white/15 hover:text-[#f5e5d9] hover:pl-5"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            My {capitalizeFirstLetter(drinkType)} Profile
-          </Link>
-
-          <Link
-            to="/tasting"
-            className="text-[#fffaf0] text-[1.1rem] mb-4 px-4 py-2 rounded-[10px] transition-all duration-300 hover:bg-white/15 hover:text-[#f5e5d9] hover:pl-5"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Single {capitalizeFirstLetter(drinkType)} Tasting
-          </Link>
-
-          <Link
-            to="/multi-tasting"
-            className="text-[#fffaf0] text-[1.1rem] mb-4 px-4 py-2 rounded-[10px] transition-all duration-300 hover:bg-white/15 hover:text-[#f5e5d9] hover:pl-5"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            {capitalizeFirstLetter(drinkType)} Showdown
-          </Link>
-
-          <Link
-            to="/events"
-            className="text-[#fffaf0] text-[1.1rem] mb-4 px-4 py-2 rounded-[10px] transition-all duration-300 hover:bg-white/15 hover:text-[#f5e5d9] hover:pl-5"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            My Events
-          </Link>
-
-          {/* Conditional Links */}
-          {false && drinkType === "wine" && (
-            <Link to="/my-wineries">My Wineries</Link>
-          )}
-          {false && drinkType === "beer" && (
-            <Link to="/my-breweries">My Breweries</Link>
-          )}
-        </div>
-      </div>
+      )}
     </>
   );
 }
