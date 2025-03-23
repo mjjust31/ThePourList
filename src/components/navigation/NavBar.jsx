@@ -30,7 +30,7 @@ export default function NavBar() {
         <Link
           to="/"
           className="text-xl font-semibold text-white flex items-center gap-2">
-          🍷 <span>RankMyPour</span>
+          🍷 <span>The Pour List</span>
         </Link>
 
         {/* Hamburger Button */}

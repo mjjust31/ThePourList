@@ -1,169 +1,134 @@
 import React, { useState } from "react";
 import PhotoUpload from "../../photo/PhotoUpload";
+import { getSortedTypesWithOtherLast } from "../../../helpers/sortOthersLast";
+import AddToInventoryButton from "../../buttons/AddtoInventoryButton";
+import years from "../shared/data/Year";
+import wineColors from "../shared/data/WineColors";
+import wineTypeOptions from "../shared/data/WineTypeOptions";
 
-// Generate year list from 2025 to 1900
-const years = Array.from({ length: 2025 - 1900 + 1 }, (_, i) => 2025 - i);
 
-const wineColors = ["Red", "White", "Rosé", "Sparkling", "Dessert", "Other"];
-
-const wineTypeOptions = {
-  Red: [
-    "Pinot Noir",
-    "Cabernet Sauvignon",
-    "Merlot",
-    "Syrah",
-    "Malbec",
-    "Zinfandel",
-    "Sangiovese",
-    "Grenache",
-    "Nebbiolo",
-    "Tempranillo",
-    "Other",
-  ],
-  White: [
-    "Chardonnay",
-    "Riesling",
-    "Pinot Grigio/Pinot Gris",
-    "Sauvignon Blanc",
-    "Gewürztraminer",
-    "Moscato/Muscat",
-    "Semillon",
-    "Viognier",
-    "Chenin Blanc",
-    "Torrontés",
-    "Other",
-  ],
-  Sparkling: ["Champagne", "Prosecco", "Moscato", "Cava", "Other"],
-  Rosé: ["Rosé", "Other"],
-  Dessert: ["Port", "Sherry", "Other"],
-  Other: ["Other"],
-};
-
-export default function WineEntryForm({ wineData, onChange }) {
+export default function WineEntryForm({ wineData, onChange, onClose, onAdd }) {
   const [showOptional, setShowOptional] = useState(false);
 
-  const handleChange = (field, value) => {
-    onChange({
-      ...wineData,
-      [field]: value,
-      ...(field === "color" && {
-        type:
-          wineTypeOptions[value]?.length === 1 ? wineTypeOptions[value][0] : "",
-        customType: "",
-      }),
-    });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    const updated = { ...wineData, [name]: value };
+
+    if (name === "color") {
+      updated.type = wineTypeOptions[value]?.length === 1 ? wineTypeOptions[value][0] : "";
+      updated.customType = "";
+    }
+
+    onChange(updated);
   };
 
-  const FormRow = ({ label, children }) => (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-4">
-      <label className="w-full sm:w-1/3 text-burgundy font-semibold">
-        {label}
-      </label>
-      <div className="w-full sm:w-2/3">{children}</div>
-    </div>
-  );
+  const handlePhotoChange = (file) => {
+    const updated = { ...wineData, photo: file };
+    onChange(updated);
+  };
 
   const handlePriceChange = (e) => {
     const value = e.target.value;
     if (/^\d*\.?\d{0,2}$/.test(value)) {
-      handleChange("price", value);
+      handleChange(e);
     }
   };
 
-  return (
-    <form className="p-4 bg-white rounded-lg shadow-md w-full max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold text-burgundy mb-6 text-center">
-        Wine Entry Form
-      </h2>
+  const FormRow = ({ label, children }) => (
+    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-4">
+      <label className="w-full sm:w-1/3 text-burgundy font-semibold">{label}</label>
+      <div className="w-full sm:w-2/3">{children}</div>
+    </div>
+  );
 
-      {/* Color */}
+  return (
+    <form className="p-4 bg-white rounded-lg shadow-md w-full max-w-2xl mx-auto" onSubmit={(e) => e.preventDefault()}>
+      <h2 className="text-2xl font-bold text-burgundy mb-6 text-center">Wine Entry Form</h2>
+
       <FormRow label="Color *">
         <select
+          name="color"
           className="w-full p-2 border border-gray-300 rounded"
           value={wineData.color || ""}
-          onChange={(e) => handleChange("color", e.target.value)}>
+          onChange={handleChange}
+        >
           <option value="">Select color</option>
           {wineColors.map((color) => (
-            <option key={color} value={color}>
-              {color}
-            </option>
+            <option key={color} value={color}>{color}</option>
           ))}
         </select>
       </FormRow>
 
-      {/* Wine Type */}
       <FormRow label="Wine Type *">
         <select
+          name="type"
           className="w-full p-2 border border-gray-300 rounded"
           value={wineData.type || ""}
-          onChange={(e) => handleChange("type", e.target.value)}
-          disabled={!wineData.color}>
+          onChange={handleChange}
+          disabled={!wineData.color}
+        >
           <option value="">Select wine type</option>
-          {(wineTypeOptions[wineData.color] || []).map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
+          {getSortedTypesWithOtherLast(wineTypeOptions[wineData.color] || []).map((type) => (
+            <option key={type} value={type}>{type}</option>
           ))}
         </select>
       </FormRow>
 
-      {/* Custom Type */}
       {wineData.type === "Other" && (
         <FormRow label="Enter Wine Type">
           <input
             type="text"
-            placeholder="Custom wine type"
+            name="customType"
             className="w-full p-2 border border-gray-300 rounded"
+            placeholder="Custom wine type"
             value={wineData.customType || ""}
-            onChange={(e) => handleChange("customType", e.target.value)}
+            onChange={handleChange}
           />
         </FormRow>
       )}
 
-      {/* Wine Brand Name */}
       <FormRow label="Wine Brand Name *">
         <input
           type="text"
-          placeholder="e.g. Robert Mondavi Reserve"
+          name="name"
           className="w-full p-2 border border-gray-300 rounded"
+          placeholder="e.g. Robert Mondavi Reserve"
           value={wineData.name || ""}
-          onChange={(e) => handleChange("name", e.target.value)}
+          onChange={handleChange}
         />
       </FormRow>
 
-      {/* Toggle Optional Section */}
       <div className="text-center mb-4">
         <button
           type="button"
           onClick={() => setShowOptional(!showOptional)}
-          className="text-burgundy underline font-medium">
-          {showOptional
-            ? "➖ Hide Optional Fields"
-            : "➕ Add More Info (Optional)"}
+          className="text-burgundy underline font-medium"
+        >
+          {showOptional ? "➖ Hide Optional Fields" : "➕ Add More Info (Optional)"}
         </button>
       </div>
 
       {showOptional && (
         <div className="transition-all duration-300">
-          {/* Year */}
           <FormRow label="Year">
             <select
+              name="year"
               className="w-full p-2 border border-gray-300 rounded"
               value={wineData.year || ""}
-              onChange={(e) => handleChange("year", e.target.value)}>
+              onChange={handleChange}
+            >
               <option value="">Select year</option>
               {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
+                <option key={year} value={year}>{year}</option>
               ))}
             </select>
           </FormRow>
 
-          {/* Price */}
           <FormRow label="Price ($)">
             <input
               type="text"
+              name="price"
               placeholder="e.g. 14.99"
               className="w-full p-2 border border-gray-300 rounded"
               value={wineData.price || ""}
@@ -171,12 +136,13 @@ export default function WineEntryForm({ wineData, onChange }) {
             />
           </FormRow>
 
-          {/* Location */}
           <FormRow label="Location Purchased">
             <select
+              name="location"
               className="w-full p-2 border border-gray-300 rounded"
               value={wineData.location || ""}
-              onChange={(e) => handleChange("location", e.target.value)}>
+              onChange={handleChange}
+            >
               <option value="">Select</option>
               <option value="Grocery Store">Grocery Store</option>
               <option value="Winery">Winery</option>
@@ -185,25 +151,26 @@ export default function WineEntryForm({ wineData, onChange }) {
             </select>
           </FormRow>
 
-          {/* Location Name (always show if selected) */}
           {wineData.location && (
             <FormRow label="Location Name">
               <input
                 type="text"
-                placeholder="e.g. Trader Joe's, Silver Oak Winery"
+                name="locationName"
                 className="w-full p-2 border border-gray-300 rounded"
+                placeholder="e.g. Trader Joe's, Silver Oak Winery"
                 value={wineData.locationName || ""}
-                onChange={(e) => handleChange("locationName", e.target.value)}
+                onChange={handleChange}
               />
             </FormRow>
           )}
 
-          {/* Sweetness */}
           <FormRow label="Sweetness">
             <select
+              name="sweetness"
               className="w-full p-2 border border-gray-300 rounded"
               value={wineData.sweetness || ""}
-              onChange={(e) => handleChange("sweetness", e.target.value)}>
+              onChange={handleChange}
+            >
               <option value="">Select</option>
               <option value="Dry">Dry</option>
               <option value="Semi-dry">Semi-dry</option>
@@ -212,25 +179,30 @@ export default function WineEntryForm({ wineData, onChange }) {
             </select>
           </FormRow>
 
-          {/* Grape Origin */}
           <FormRow label="Grape Origin">
             <input
               type="text"
-              placeholder="e.g. Napa Valley, France"
+              name="origin"
               className="w-full p-2 border border-gray-300 rounded"
+              placeholder="e.g. Napa Valley, France"
               value={wineData.origin || ""}
-              onChange={(e) => handleChange("origin", e.target.value)}
+              onChange={handleChange}
             />
           </FormRow>
 
-          {/* Upload Photo */}
           <FormRow label="Wine Label Photo">
             <PhotoUpload
               label="Upload Wine Photo"
               file={wineData.photo}
-              onChange={(file) => handleChange("photo", file)}
+              onChange={handlePhotoChange}
             />
           </FormRow>
+        </div>
+      )}
+
+      {onAdd && (
+        <div className="text-center mt-6">
+          <AddToInventoryButton onClick={onAdd} />
         </div>
       )}
     </form>

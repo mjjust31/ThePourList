@@ -9,19 +9,38 @@ import CocktailEntryForm from "../components/forms/single/CocktailEntryForm";
 
 export default function SingleTasting() {
   const { drinkType } = useDrink();
-  const [formData, setFormData] = useState({}); // ✅ initialize with empty object
+  const [formData, setFormData] = useState({});
+
+  const handleAdd = () => {
+    // For now, we can just log the data — later you could navigate or show a confirmation
+    console.log("Single wine entry submitted:", formData);
+    alert("Wine entry saved! 🎉");
+  };
 
   return (
     <Layout>
       <NavSpacer />
       {drinkType === "wine" && (
-        <WineEntryForm wineData={formData} onChange={setFormData} />
+        <WineEntryForm
+          wineData={formData}
+          onChange={setFormData}
+          onAdd={handleAdd}
+          showAddButton={true}
+        />
       )}
       {drinkType === "beer" && (
-        <BeerEntryForm beerData={formData} onChange={setFormData} />
+        <BeerEntryForm
+          beerData={formData}
+          onChange={setFormData}
+          // Placeholder if you want a similar button for beer
+        />
       )}
       {drinkType === "cocktail" && (
-        <CocktailEntryForm cocktailData={formData} onChange={setFormData} />
+        <CocktailEntryForm
+          cocktailData={formData}
+          onChange={setFormData}
+          // Placeholder if you want a similar button for cocktails
+        />
       )}
       {!drinkType && (
         <div className="text-center mt-12 text-burgundy text-xl font-medium">

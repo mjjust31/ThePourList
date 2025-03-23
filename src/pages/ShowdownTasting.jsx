@@ -1,46 +1,106 @@
-import React from "react";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import WineCard from "../components/cards/WineCard";
+import WineEntryForm from "../components/forms/single/WineEntryForm"; // renamed for clarity
+import NavSpacer from "../components/layout/NavSpacer";
 
-export default function ShowdownTasting() {
+const defaultWineData = {
+  name: "",
+  year: "",
+  color: "",
+  category: "",
+  notes: "",
+  type: "",
+  customType: "",
+  price: "",
+  location: "",
+  locationName: "",
+  sweetness: "",
+  origin: "",
+  photo: null,
+};
+
+const ShowdownTasting = () => {
+  const location = useLocation();
+  const passedCount = location.state?.wineCount || 3;
+
+  const [wineData, setWineData] = useState(
+    Array.from({ length: passedCount }, () => ({ ...defaultWineData }))
+  );
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleCardClick = (index) => {
+    setSelectedIndex(index);
+    setShowModal(true);
+  };
+
+  const handleFormSave = (formData) => {
+    const updated = [...wineData];
+    updated[selectedIndex] = formData;
+    setWineData(updated);
+    setShowModal(false);
+  };
+
+  const goToPrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex((prev) => prev - 1);
+    }
+  };
+
+  const goToNext = () => {
+    if (currentIndex < wineData.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    }
+  };
+
   return (
-    <div className="wine-showdown flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="text-center bg-white rounded-lg shadow-md p-8 max-w-[800px] w-full">
-        <h2 className="text-3xl font-bold text-center text-burgundy mb-6">
-          Pour & Score: Showdown
-        </h2>
+    <div className="p-4">
+      <NavSpacer />
+      <h2 className="text-2xl font-semibold mb-4 text-center text-burgundy">
+        🍷 Pour and Score Showdown
+      </h2>
 
-        {/* Placeholder for wine showdown functionality */}
-        <div className="wine-comparison">
-          <p className="text-xl text-gray-700 mb-6">
-            Compare your favorite wines and select the best one!
-          </p>
-          {/* You can render the wine comparison functionality here */}
-          <div className="wine-list">
-            <div className="wine-item mb-4">
-              <h3 className="font-semibold text-xl">Wine A</h3>
-              <p className="text-gray-600">A red wine with rich flavors.</p>
-            </div>
-            <div className="wine-item mb-4">
-              <h3 className="font-semibold text-xl">Wine B</h3>
-              <p className="text-gray-600">
-                A light white wine with fruity notes.
-              </p>
-            </div>
-            <div className="wine-item mb-4">
-              <h3 className="font-semibold text-xl">Wine C</h3>
-              <p className="text-gray-600">
-                A rose wine with floral undertones.
-              </p>
-            </div>
+      {/* Carousel with arrows */}
+      <div className="flex items-center justify-center space-x-4 bg-cream p-6 rounded-xl shadow-md max-w-lg mx-auto">
+        <button
+          onClick={goToPrevious}
+          disabled={currentIndex === 0}
+          className="text-4xl px-2 text-burgundy disabled:opacity-30"
+        >
+          ←
+        </button>
+
+        <WineCard
+          index={currentIndex}
+          wineData={wineData[currentIndex]}
+          onClick={handleCardClick}
+        />
+
+        <button
+          onClick={goToNext}
+          disabled={currentIndex === wineData.length - 1}
+          className="text-4xl px-2 text-burgundy disabled:opacity-30"
+        >
+          →
+        </button>
+      </div>
+
+      {/* Modal with Wine Form */}
+      {showModal && selectedIndex !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full relative z-50">
+            <WineEntryForm
+              wineData={wineData[selectedIndex] || defaultWineData}
+              onChange={(updatedData) => handleFormSave(updatedData)}
+              onAdd={() => setShowModal(false)}
+            />
           </div>
         </div>
-
-        {/* Placeholder for buttons or functionality */}
-        <div className="mt-8">
-          <button className="bg-[#8b9d70] text-white py-2 px-6 rounded-lg shadow-lg hover:bg-[#7a8e60]">
-            Start Tasting
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   );
-}
+};
+
+export default ShowdownTasting;

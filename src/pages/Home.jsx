@@ -5,27 +5,27 @@ import DrinkSwitcher from "../components/home/DrinkSwitcher";
 
 export default function Home() {
   const { changeDrink } = useDrink();
-  const [hasSelectedDrink, setHasSelectedDrink] = useState(false); // ✅ control flow
+  const [hasSelectedDrink, setHasSelectedDrink] = useState(false);
   const [bottleCount, setBottleCount] = useState(1);
   const navigate = useNavigate();
 
   const handleDrinkSelection = (type) => {
-    changeDrink(type);           // updates global drink type
-    setHasSelectedDrink(true);   // ✅ hide switcher, show counter
+    changeDrink(type);
+    setHasSelectedDrink(true);
   };
 
   const handleBottleCountSelection = () => {
     if (bottleCount === 1) {
       navigate("/tasting");
     } else {
-      navigate("/showdown");
+      navigate("/showdown", { state: { wineCount: bottleCount } });
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-ivy-green to-burgundy text-white p-6">
       <h1 className="text-4xl font-semibold mb-4 text-center">
-        Welcome to RankMyPour 🍷
+        Welcome to The Pour List 🍷
       </h1>
       <p className="text-xl mb-8 text-center">Begin your tasting journey</p>
 
@@ -37,7 +37,6 @@ export default function Home() {
             How many bottles are you trying today?
           </p>
 
-          {/* Counter below question */}
           <div className="flex flex-col items-center mb-6">
             <button
               onClick={() => setBottleCount((prev) => Math.min(prev + 1, 50))}
@@ -54,7 +53,6 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Start Tasting below the counter */}
           <button
             onClick={handleBottleCountSelection}
             className="mt-2 px-8 py-3 bg-burgundy text-white rounded-lg hover:bg-burgundy/80 transition-all"
