@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import DrinkSwitcherDropdown from "../dropdowns/DrinkSwitcherDroperdown";
+import DrinkSwitcherDropdown from "../dropdowns/DrinkSwitcherDroperdown"; // Fixed typo
 import GuideUser from "../home/GuideUser";
 
 export default function UserDashboard() {
@@ -18,7 +18,7 @@ export default function UserDashboard() {
       navigate("/showdown", { state: { wineCount: numBottles } });
     }
   };
-  
+
   return (
     <div className="dashboard text-white text-left space-y-8">
       {/* Drink Switcher */}
@@ -43,15 +43,24 @@ export default function UserDashboard() {
       <div className="flex flex-col gap-3">
         <Link
           to="/single"
-          className="inline-block bg-[var(--custom-gold)] text-gray-900 font-semibold py-2 px-6 rounded-xl shadow-md hover:bg-yellow-400 hover:shadow-lg transition-all duration-300 ease-in-out">
+          className="inline-block bg-[var(--custom-gold)] text-gray-900 font-semibold py-2 px-6 rounded-xl shadow-md hover:bg-yellow-400 hover:shadow-lg transition-all duration-300 ease-in-out"
+        >
           Start a Single Bottle Tasting
         </Link>
 
         <button
           onClick={handleTastingPartyClick}
-          className="inline-block bg-pink-500 text-white font-semibold py-2 px-6 rounded-xl shadow-md hover:bg-pink-600 hover:shadow-lg transition-all duration-300 ease-in-out">
+          className="inline-block bg-pink-500 text-white font-semibold py-2 px-6 rounded-xl shadow-md hover:bg-pink-600 hover:shadow-lg transition-all duration-300 ease-in-out"
+        >
           Start a Tasting Party
         </button>
+
+        <Link
+          to="/profile/friends"
+          className="inline-block bg-[var(--custom-gold)] text-gray-900 font-semibold py-2 px-6 rounded-xl shadow-md hover:bg-yellow-400 hover:shadow-lg transition-all duration-300 ease-in-out"
+        >
+          My Friends
+        </Link>
 
         {/* Optional: View My Wineries (disabled for now) */}
         {false && (
@@ -61,9 +70,13 @@ export default function UserDashboard() {
         )}
       </div>
 
+      {/* Guide Component */}
       {showGuide && (
         <div className="mt-6">
-          <GuideUser onComplete={handleGuideComplete} defaultBottleCount={2} />
+          <GuideUser
+            onComplete={handleGuideComplete}
+            defaultBottleCount={2}
+          />
         </div>
       )}
 
@@ -71,7 +84,8 @@ export default function UserDashboard() {
       <div className="mt-6">
         <a
           href="/"
-          className="text-[var(--custom-gold)] underline hover:text-white transition">
+          className="text-[var(--custom-gold)] underline hover:text-white transition"
+        >
           ← Return to Home
         </a>
       </div>
