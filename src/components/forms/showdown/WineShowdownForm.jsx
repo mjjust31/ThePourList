@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import WineCard from "../../cards/WineCard";
 import WineEntryForm from "../single/WineEntryForm";
 import NavSpacer from "../../layout/NavSpacer";
+import StartShowdownButton from "../../buttons/StartShowdownButton";
 import {
   handleCardClick,
   handleFormSubmit,
@@ -37,15 +38,22 @@ const WineShowdownForm = () => {
   );
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showSavedModal, setShowSavedModal] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const onCardClick = (index) =>
     handleCardClick(index, setSelectedIndex, setShowModal);
 
-  const onFormSubmit = () => handleFormSubmit(setShowModal);
+  const onFormSubmit = () =>
+    handleFormSubmit(
+      setShowModal,
+      setShowSavedModal,
+      setCurrentIndex,
+      currentIndex,
+      wineData.length
+    );
 
-  const onGoToPrevious = () =>
-    goToPrevious(currentIndex, setCurrentIndex);
+  const onGoToPrevious = () => goToPrevious(currentIndex, setCurrentIndex);
 
   const onGoToNext = () =>
     goToNext(currentIndex, wineData.length - 1, setCurrentIndex);
@@ -54,6 +62,15 @@ const WineShowdownForm = () => {
     const updated = [...wineData];
     updated[selectedIndex] = updatedWine;
     setWineData(updated);
+  };
+
+  const allWinesFilled = wineData.every(
+    (wine) => wine.name && wine.color && wine.type
+  );
+
+  const handleStartShowdown = () => {
+    alert("Showdown Began");
+    // Future: Route to showdown page or share with friends
   };
 
   return (
@@ -87,6 +104,14 @@ const WineShowdownForm = () => {
         </button>
       </div>
 
+      {/* Start Showdown Button – only shows if all cards are complete */}
+      {allWinesFilled && (
+        <div className="flex justify-center">
+          <StartShowdownButton onClick={handleStartShowdown} />
+        </div>
+      )}
+
+      {/* Form Modal */}
       {showModal && selectedIndex !== null && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center"
@@ -101,6 +126,15 @@ const WineShowdownForm = () => {
               onChange={handleWineChange}
               onAdd={onFormSubmit}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Wine Saved Modal */}
+      {showSavedModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center text-burgundy text-xl font-semibold">
+            ✅ Wine Saved!
           </div>
         </div>
       )}
