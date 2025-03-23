@@ -4,11 +4,15 @@ export default function ShowdownTasting() {
   return (
     <div className="wine-showdown flex items-center justify-center min-h-screen bg-gray-100">
       <div className="text-center bg-white rounded-lg shadow-md p-8 max-w-[800px] w-full">
-        <h2 className="text-3xl font-serif text-burgundy mb-8">Wine Showdown</h2>
+        <h2 className="text-3xl font-bold text-center text-burgundy mb-6">
+          Pour & Score: Showdown
+        </h2>
 
         {/* Placeholder for wine showdown functionality */}
         <div className="wine-comparison">
-          <p className="text-xl text-gray-700 mb-6">Compare your favorite wines and select the best one!</p>
+          <p className="text-xl text-gray-700 mb-6">
+            Compare your favorite wines and select the best one!
+          </p>
           {/* You can render the wine comparison functionality here */}
           <div className="wine-list">
             <div className="wine-item mb-4">
@@ -17,11 +21,15 @@ export default function ShowdownTasting() {
             </div>
             <div className="wine-item mb-4">
               <h3 className="font-semibold text-xl">Wine B</h3>
-              <p className="text-gray-600">A light white wine with fruity notes.</p>
+              <p className="text-gray-600">
+                A light white wine with fruity notes.
+              </p>
             </div>
             <div className="wine-item mb-4">
               <h3 className="font-semibold text-xl">Wine C</h3>
-              <p className="text-gray-600">A rose wine with floral undertones.</p>
+              <p className="text-gray-600">
+                A rose wine with floral undertones.
+              </p>
             </div>
           </div>
         </div>

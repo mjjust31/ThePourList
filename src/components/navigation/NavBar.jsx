@@ -77,7 +77,7 @@ export default function NavBar() {
             </Link>
 
             <Link
-              to="/multi-tasting"
+              to="/showdown"
               className="hover:text-yellow-400"
               onClick={toggleMenu}>
               {drinkType ? `${drinkType}` : "Drink"} Showdown
