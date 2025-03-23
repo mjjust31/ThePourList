@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./index.css";
 import React from "react";
 import Home from "./pages/Home";
+import NavBar from "./components/shared/layout/NavBar";
 import Tasting from "./pages/SingleTasting";
-import NavBar from "./components/navigation/NavBar";
 import Profile from "./pages/Profile";
 import Showdown from "./pages/ShowdownTasting";
 

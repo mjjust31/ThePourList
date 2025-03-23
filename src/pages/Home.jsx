@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDrink } from "../contexts/DrinkContext";
-import DrinkSwitcher from "../components/home/DrinkSwitcher";
+import DrinkSwitcher from "../components/user/buttons/DrinkSwitcher";
 
 export default function Home() {
   const { changeDrink } = useDrink();
