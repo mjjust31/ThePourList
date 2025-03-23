@@ -5,57 +5,48 @@ import AddToInventoryButton from "../../buttons/AddtoInventoryButton";
 import years from "../shared/data/Year";
 import wineColors from "../shared/data/WineColors";
 import wineTypeOptions from "../shared/data/WineTypeOptions";
+import {
+  handlePhotoChange,
+  handleInputChange,
+  handlePriceChange
+} from "../shared/utils/formHandler";
 
+// Moved out of component to avoid re-creation on every render
+const FormRow = ({ label, children }) => (
+  <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-4">
+    <label className="w-full sm:w-1/3 text-burgundy font-semibold">
+      {label}
+    </label>
+    <div className="w-full sm:w-2/3">{children}</div>
+  </div>
+);
 
 export default function WineEntryForm({ wineData, onChange, onClose, onAdd }) {
   const [showOptional, setShowOptional] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    const updated = { ...wineData, [name]: value };
-
-    if (name === "color") {
-      updated.type = wineTypeOptions[value]?.length === 1 ? wineTypeOptions[value][0] : "";
-      updated.customType = "";
-    }
-
-    onChange(updated);
+    handleInputChange(e, wineData, onChange, wineTypeOptions);
   };
-
-  const handlePhotoChange = (file) => {
-    const updated = { ...wineData, photo: file };
-    onChange(updated);
-  };
-
-  const handlePriceChange = (e) => {
-    const value = e.target.value;
-    if (/^\d*\.?\d{0,2}$/.test(value)) {
-      handleChange(e);
-    }
-  };
-
-  const FormRow = ({ label, children }) => (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-4">
-      <label className="w-full sm:w-1/3 text-burgundy font-semibold">{label}</label>
-      <div className="w-full sm:w-2/3">{children}</div>
-    </div>
-  );
 
   return (
-    <form className="p-4 bg-white rounded-lg shadow-md w-full max-w-2xl mx-auto" onSubmit={(e) => e.preventDefault()}>
-      <h2 className="text-2xl font-bold text-burgundy mb-6 text-center">Wine Entry Form</h2>
+    <form
+      className="p-4 bg-white rounded-lg shadow-md w-full max-w-2xl mx-auto"
+      onSubmit={(e) => e.preventDefault()}>
+      <h2 className="text-2xl font-bold text-burgundy mb-6 text-center">
+        Wine Entry Form
+      </h2>
 
       <FormRow label="Color *">
         <select
           name="color"
           className="w-full p-2 border border-gray-300 rounded"
           value={wineData.color || ""}
-          onChange={handleChange}
-        >
+          onChange={handleChange}>
           <option value="">Select color</option>
           {wineColors.map((color) => (
-            <option key={color} value={color}>{color}</option>
+            <option key={color} value={color}>
+              {color}
+            </option>
           ))}
         </select>
       </FormRow>
@@ -66,11 +57,14 @@ export default function WineEntryForm({ wineData, onChange, onClose, onAdd }) {
           className="w-full p-2 border border-gray-300 rounded"
           value={wineData.type || ""}
           onChange={handleChange}
-          disabled={!wineData.color}
-        >
+          disabled={!wineData.color}>
           <option value="">Select wine type</option>
-          {getSortedTypesWithOtherLast(wineTypeOptions[wineData.color] || []).map((type) => (
-            <option key={type} value={type}>{type}</option>
+          {getSortedTypesWithOtherLast(
+            wineTypeOptions[wineData.color] || []
+          ).map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
           ))}
         </select>
       </FormRow>
@@ -103,9 +97,10 @@ export default function WineEntryForm({ wineData, onChange, onClose, onAdd }) {
         <button
           type="button"
           onClick={() => setShowOptional(!showOptional)}
-          className="text-burgundy underline font-medium"
-        >
-          {showOptional ? "➖ Hide Optional Fields" : "➕ Add More Info (Optional)"}
+          className="text-burgundy underline font-medium">
+          {showOptional
+            ? "➖ Hide Optional Fields"
+            : "➕ Add More Info (Optional)"}
         </button>
       </div>
 
@@ -116,11 +111,12 @@ export default function WineEntryForm({ wineData, onChange, onClose, onAdd }) {
               name="year"
               className="w-full p-2 border border-gray-300 rounded"
               value={wineData.year || ""}
-              onChange={handleChange}
-            >
+              onChange={handleChange}>
               <option value="">Select year</option>
               {years.map((year) => (
-                <option key={year} value={year}>{year}</option>
+                <option key={year} value={year}>
+                  {year}
+                </option>
               ))}
             </select>
           </FormRow>
@@ -132,7 +128,7 @@ export default function WineEntryForm({ wineData, onChange, onClose, onAdd }) {
               placeholder="e.g. 14.99"
               className="w-full p-2 border border-gray-300 rounded"
               value={wineData.price || ""}
-              onChange={handlePriceChange}
+              onChange={(e) => handlePriceChange(e, wineData, onChange)}
             />
           </FormRow>
 
@@ -141,8 +137,7 @@ export default function WineEntryForm({ wineData, onChange, onClose, onAdd }) {
               name="location"
               className="w-full p-2 border border-gray-300 rounded"
               value={wineData.location || ""}
-              onChange={handleChange}
-            >
+              onChange={handleChange}>
               <option value="">Select</option>
               <option value="Grocery Store">Grocery Store</option>
               <option value="Winery">Winery</option>
@@ -169,8 +164,7 @@ export default function WineEntryForm({ wineData, onChange, onClose, onAdd }) {
               name="sweetness"
               className="w-full p-2 border border-gray-300 rounded"
               value={wineData.sweetness || ""}
-              onChange={handleChange}
-            >
+              onChange={handleChange}>
               <option value="">Select</option>
               <option value="Dry">Dry</option>
               <option value="Semi-dry">Semi-dry</option>
@@ -194,7 +188,7 @@ export default function WineEntryForm({ wineData, onChange, onClose, onAdd }) {
             <PhotoUpload
               label="Upload Wine Photo"
               file={wineData.photo}
-              onChange={handlePhotoChange}
+              onChange={(file) => handlePhotoChange(file, wineData, onChange)}
             />
           </FormRow>
         </div>

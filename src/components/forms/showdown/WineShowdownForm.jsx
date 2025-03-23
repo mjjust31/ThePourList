@@ -1,48 +1,108 @@
+// src/forms/wine/WineShowdownForm.jsx
+
 import { useState } from "react";
-import WineCard from "./WineCard";
-import EntryFormModal from "./WineEntryForm"; // your existing modal/form
+import { useLocation } from "react-router-dom";
+import WineCard from "../../cards/WineCard";
+import WineEntryForm from "../single/WineEntryForm";
+import NavSpacer from "../../layout/NavSpacer";
+import {
+  handleCardClick,
+  handleFormSubmit,
+  goToPrevious,
+  goToNext,
+} from "../shared/utils/formHandler";
+
+const defaultWineData = {
+  name: "",
+  year: "",
+  color: "",
+  category: "",
+  notes: "",
+  type: "",
+  customType: "",
+  price: "",
+  location: "",
+  locationName: "",
+  sweetness: "",
+  origin: "",
+  photo: null,
+};
 
 const WineShowdownForm = () => {
-  const [wineCount, setWineCount] = useState(3); // default to 3 for now
-  const [wineData, setWineData] = useState(Array.from({ length: wineCount }, () => ({})));
+  const location = useLocation();
+  const passedCount = location.state?.wineCount || 3;
+
+  const [wineData, setWineData] = useState(
+    Array.from({ length: passedCount }, () => ({ ...defaultWineData }))
+  );
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handleCardClick = (index) => {
-    setSelectedIndex(index);
-    setShowModal(true);
-  };
+  const onCardClick = (index) =>
+    handleCardClick(index, setSelectedIndex, setShowModal);
 
-  const handleFormSave = (formData) => {
+  const onFormSubmit = () => handleFormSubmit(setShowModal);
+
+  const onGoToPrevious = () =>
+    goToPrevious(currentIndex, setCurrentIndex);
+
+  const onGoToNext = () =>
+    goToNext(currentIndex, wineData.length - 1, setCurrentIndex);
+
+  const handleWineChange = (updatedWine) => {
     const updated = [...wineData];
-    updated[selectedIndex] = formData;
+    updated[selectedIndex] = updatedWine;
     setWineData(updated);
-    setShowModal(false);
   };
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-semibold mb-4">Wine Showdown</h2>
+      <NavSpacer />
+      <h2 className="text-2xl font-semibold mb-4 text-center text-burgundy">
+        🍷 Pour and Score Showdown
+      </h2>
 
-      {/* Horizontal Carousel */}
-      <div className="flex space-x-4 overflow-x-auto pb-4">
-        {wineData.map((wine, idx) => (
-          <WineCard
-            key={idx}
-            index={idx}
-            wineData={wine}
-            onClick={handleCardClick}
-          />
-        ))}
+      <div className="flex items-center justify-center space-x-4 bg-cream p-6 rounded-xl shadow-md max-w-lg mx-auto">
+        <button
+          onClick={onGoToPrevious}
+          disabled={currentIndex === 0}
+          className="text-4xl px-2 text-burgundy disabled:opacity-30"
+        >
+          ←
+        </button>
+
+        <WineCard
+          index={currentIndex}
+          wineData={wineData[currentIndex]}
+          onClick={onCardClick}
+        />
+
+        <button
+          onClick={onGoToNext}
+          disabled={currentIndex === wineData.length - 1}
+          className="text-4xl px-2 text-burgundy disabled:opacity-30"
+        >
+          →
+        </button>
       </div>
 
-      {/* Modal Form */}
       {showModal && selectedIndex !== null && (
-        <EntryFormModal
-          initialData={wineData[selectedIndex]}
-          onSave={handleFormSave}
-          onClose={() => setShowModal(false)}
-        />
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center"
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full relative z-50"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <WineEntryForm
+              wineData={wineData[selectedIndex] || defaultWineData}
+              onChange={handleWineChange}
+              onAdd={onFormSubmit}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
