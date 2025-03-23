@@ -1,7 +1,7 @@
 import React from "react";
-import Avatar from "../assets/images/Avatar.png";
 import NavSpacer from "../components/shared/layout/NavSpacer";
-import UserDashboard from "../components/user/dashboard/UserDashboard"; // you'll customize this
+import UserDashboard from "../components/user/dashboard/UserDashboard";
+import ProfilePhotoUpload from "../components/shared/photo/ProfilePhotoUpload"; // new uploader
 
 export default function Profile() {
   return (
@@ -11,13 +11,9 @@ export default function Profile() {
         My Pourfile
       </h1>
 
-      {/* Profile picture */}
+      {/* Profile picture (now interactive upload) */}
       <div className="profile-img mb-6">
-        <img
-          src={Avatar}
-          alt="Profile"
-          className="w-32 h-32 rounded-full mx-auto border-4 border-[var(--custom-gold)]"
-        />
+        <ProfilePhotoUpload />
       </div>
 
       {/* Welcome message */}
