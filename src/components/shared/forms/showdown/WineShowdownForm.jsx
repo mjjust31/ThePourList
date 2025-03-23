@@ -1,7 +1,6 @@
 // src/forms/wine/WineShowdownForm.jsx
-
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import WineCard from "../../cards/WineCard";
 import WineEntryForm from "../entry/WineEntryForm";
 import NavSpacer from "../../layout/NavSpacer";
@@ -31,7 +30,14 @@ const defaultWineData = {
 
 const WineShowdownForm = () => {
   const location = useLocation();
-  const passedCount = location.state?.wineCount || 3;
+  const navigate = useNavigate();
+  const passedCount = location.state?.wineCount;
+
+  useEffect(() => {
+    if (!passedCount) {
+      navigate("/dashboard"); // Redirect if wineCount is missing
+    }
+  }, [passedCount, navigate]);
 
   const [wineData, setWineData] = useState(
     Array.from({ length: passedCount }, () => ({ ...defaultWineData }))
