@@ -1,4 +1,3 @@
-/* Tailwind base import */
 @import "tailwindcss";
 
 /* Custom Variables */
@@ -18,8 +17,8 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-color: var(--custom-light-gray);
-  color: var(--custom-dark-gray);
+  background-color: #ffffff; /* switched to white for clarity */
+  color: #000000; /* switched to black for visibility */
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -30,38 +29,24 @@ body {
 /* Anchor Tags */
 a {
   font-weight: 500;
-  color: var(--custom-burgundy);
-  text-decoration: none;
-}
-a:hover {
-  color: var(--custom-gold);
+  color: inherit; /* neutral for now */
+  text-decoration: underline;
 }
 
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
-  color: var(--custom-burgundy);
+  color: inherit;
   margin: 0;
 }
 
-/* Buttons */
+/* Buttons - TEMPORARY reset to prevent global red/white */
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
+  all: unset;
   font-family: inherit;
-  background-color: var(--custom-burgundy);
-  color: var(--custom-white);
   cursor: pointer;
-  transition: all 0.25s ease-in-out;
 }
+
+/* Add minimal default hover if needed */
 button:hover {
-  background-color: var(--custom-gold);
-  border-color: var(--custom-gold);
-}
-button:focus,
-button:focus-visible {
-  outline: 2px solid var(--custom-gold);
-  outline-offset: 2px;
+  text-decoration: underline;
 }
