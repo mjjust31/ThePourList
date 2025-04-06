@@ -16,7 +16,7 @@ export default function NavBar() {
   return (
     <>
       {/* Nav Container */}
-      <nav className="flex justify-between items-center p-4 bg-gray-800 text-white fixed top-0 left-0 right-0 z-50">
+      <nav className="flex justify-between items-center p-4 bg-gray-800 text-white fixed top-0 left-0 right-0 z-50 w-full">
         {/* Notification Icon */}
         <div className="relative">
           <button className="text-white text-xl">
@@ -57,11 +57,19 @@ export default function NavBar() {
           </div>
 
           {/* Menu Items */}
-
           <div className="flex flex-col p-6 space-y-4">
             <Link to="/" className="hover:text-yellow-400" onClick={toggleMenu}>
               Home
             </Link>
+
+            {/* Add Wine Cellar Link */}
+            <Link
+              to="/inventory"
+              className="hover:text-yellow-400"
+              onClick={toggleMenu}>
+              Wine Cellar
+            </Link>
+
             <Link
               to="/profile"
               className="hover:text-yellow-400"
@@ -92,6 +100,36 @@ export default function NavBar() {
           </div>
         </div>
       )}
+
+      {/* Desktop Menu */}
+      <div className="hidden lg:flex lg:justify-center lg:space-x-6 lg:p-4 lg:bg-gray-800 lg:text-white lg:fixed lg:top-0 lg:left-0 lg:right-0 lg:z-50">
+        <Link to="/" className="hover:text-yellow-400">
+          Home
+        </Link>
+        <Link to="/wine-cellar" className="hover:text-yellow-400">
+          Wine Cellar
+        </Link>
+        <Link
+          to="/profile"
+          className="hover:text-yellow-400">
+          My {drinkType ? `${drinkType}` : "Drink"} Profile
+        </Link>
+        <Link
+          to="/tasting"
+          className="hover:text-yellow-400">
+          Single {drinkType ? `${drinkType}` : "Drink"} Tasting
+        </Link>
+        <Link
+          to="/showdown"
+          className="hover:text-yellow-400">
+          {drinkType ? `${drinkType}` : "Drink"} Showdown
+        </Link>
+        <Link
+          to="/events"
+          className="hover:text-yellow-400">
+          My Events
+        </Link>
+      </div>
     </>
   );
 }

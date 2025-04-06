@@ -8,7 +8,11 @@ export const useDrink = () => useContext(DrinkContext);
 
 // Context Provider Component
 export const DrinkProvider = ({ children }) => {
-  const [drinkType, setDrinkType] = useState('wine'); // default is wine
+  // Default drink type is 'wine'
+  const [drinkType, setDrinkType] = useState('wine');
+  
+  // State to hold the user's wine collection (or future drink collection)
+  const [userWines, setUserWines] = useState([]);
 
   // Function to change drink type
   const changeDrink = (type) => {
@@ -24,8 +28,14 @@ export const DrinkProvider = ({ children }) => {
     }
   };
 
+  // Function to add a wine to the user's inventory
+  const addWineToUserInventory = (newWine) => {
+    setUserWines((prevWines) => [...prevWines, newWine]);
+  };
+
+  // Provide the context value
   return (
-    <DrinkContext.Provider value={{ drinkType, changeDrink }}>
+    <DrinkContext.Provider value={{ drinkType, changeDrink, userWines, addWineToUserInventory }}>
       {children}
     </DrinkContext.Provider>
   );

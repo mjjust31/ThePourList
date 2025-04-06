@@ -20,11 +20,39 @@ const FormRow = ({ label, children }) => (
   </div>
 );
 
-export default function WineEntryForm({ wineData, onChange, onClose, onAdd }) {
+export default function WineEntryForm({
+  wineData,
+  onChange,
+  onClose,
+  onAdd,
+  inventory = [],
+}) {
   const [showOptional, setShowOptional] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
 
   const handleChange = (e) => {
     handleInputChange(e, wineData, onChange, wineTypeOptions);
+
+    // Autocomplete suggestions for wine name
+    if (e.target.name === "name") {
+      const value = e.target.value.toLowerCase();
+      if (value.length >= 2) {
+        const matches = inventory.filter((wine) =>
+          wine.name.toLowerCase().includes(value)
+        );
+        setSuggestions(matches);
+      } else {
+        setSuggestions([]);
+      }
+    }
+  };
+
+  const handleSuggestionClick = (wine) => {
+    onChange({
+      ...wine,
+      tasted: false, // reset status if needed
+    });
+    setSuggestions([]);
   };
 
   return (
@@ -83,14 +111,28 @@ export default function WineEntryForm({ wineData, onChange, onClose, onAdd }) {
         )}
 
         <FormRow label="Wine Brand Name *">
-          <input
-            type="text"
-            name="name"
-            className="w-full p-2 border border-gray-300 rounded"
-            placeholder="e.g. Robert Mondavi Reserve"
-            value={wineData.name || ""}
-            onChange={handleChange}
-          />
+          <div className="relative">
+            <input
+              type="text"
+              name="name"
+              className="w-full p-2 border border-gray-300 rounded"
+              placeholder="e.g. Robert Mondavi Reserve"
+              value={wineData.name || ""}
+              onChange={handleChange}
+            />
+            {suggestions.length > 0 && (
+              <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow mt-1 max-h-48 overflow-y-auto">
+                {suggestions.map((wine) => (
+                  <li
+                    key={wine.id || `${wine.name}-${wine.year}`}
+                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleSuggestionClick(wine)}>
+                    {wine.name} ({wine.year || "Unknown Year"}) – {wine.type}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </FormRow>
 
         <div className="text-center mb-4">
