@@ -1,18 +1,23 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React from "react";
 import { DrinkProvider } from "./contexts/DrinkContext"; // Import DrinkProvider
-import Home from "./pages/Home";
+import Home from "./pages/user/Home";
 import NavBar from "./components/shared/layout/NavBar";
-import SingleTaste from "./pages/SingleTasting";
-import Profile from "./pages/Profile";
-import Showdown from "./pages/ShowdownTasting";
-import Friends from "./pages/Friendship";
-import Inventory from "./pages/Inventory";
+import SingleTaste from "./pages/user/profile/SingleTasting";
+import Profile from "./pages/user/profile/Profile";
+import Showdown from "./pages/user/profile/ShowdownTasting";
+import Friends from "./pages/user/profile/Friendship";
+import Inventory from "./pages/user/inventory/Inventory";
+import ToTasteDashboard from "./pages/user/inventory/ToTasteDashboard";
+
 import "./index.css";
+
 
 function App() {
   return (
-    <DrinkProvider> {/* Wrap the app with DrinkProvider */}
+    <DrinkProvider>
+      {" "}
+      {/* Wrap the app with DrinkProvider */}
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -21,6 +26,8 @@ function App() {
         <Route path="/showdown" element={<Showdown />} />
         <Route path="/profile/friends" element={<Friends />} />
         <Route path="/inventory" element={<Inventory />} />
+        <Route path="/inventory/to-taste" element={<ToTasteDashboard />} />
+
         {/* Add more routes here */}
       </Routes>
     </DrinkProvider>

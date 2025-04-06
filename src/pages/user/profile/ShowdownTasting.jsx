@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import WineShowdownForm from "../components/shared/forms/showdown/WineShowdownForm";
-import NavSpacer from "../components/shared/layout/NavSpacer";
+import WineShowdownForm from "../../../components/shared/forms/showdown/WineShowdownForm";
+import NavSpacer from "../../../components/shared/layout/NavSpacer";
 
 const ShowdownTasting = () => {
   const location = useLocation();

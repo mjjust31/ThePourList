@@ -1,7 +1,7 @@
 import React from "react";
-import NavSpacer from "../components/shared/layout/NavSpacer";
-import UserDashboard from "../components/user/dashboard/UserDashboard";
-import ProfilePhotoUpload from "../components/shared/photo/ProfilePhotoUpload"; // new uploader
+import NavSpacer from "../../../components/shared/layout/NavSpacer";
+import UserDashboard from "../../../components/user/dashboard/UserDashboard";
+import ProfilePhotoUpload from "../../../components/shared/photo/ProfilePhotoUpload"; // new uploader
 
 export default function Profile() {
   return (

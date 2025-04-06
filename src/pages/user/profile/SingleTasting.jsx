@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useDrink } from "../contexts/DrinkContext";
-import Layout from "../components/shared/layout/Layout";
-import NavSpacer from "../components/shared/layout/NavSpacer";
-import WineEntryForm from "../components/shared/forms/entry/WineEntryForm";
-import BeerEntryForm from "../components/shared/forms/entry/BeerEntryForm";
-import CocktailEntryForm from "../components/shared/forms/entry/CocktailEntryForm";
+import { useDrink } from "../../../contexts/DrinkContext";
+import Layout from "../../../components/shared/layout/Layout";
+import NavSpacer from "../../../components/shared/layout/NavSpacer";
+import WineEntryForm from "../../../components/shared/forms/entry/WineEntryForm";
+import BeerEntryForm from "../../../components/shared/forms/entry/BeerEntryForm";
+import CocktailEntryForm from "../../../components/shared/forms/entry/CocktailEntryForm";
 
 export default function SingleTasting() {
   const { drinkType } = useDrink();

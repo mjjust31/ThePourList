@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDrink } from "../contexts/DrinkContext";
-import DrinkSwitcher from "../components/user/buttons/DrinkSwitcher";
+import { useDrink } from "../../contexts/DrinkContext";
+import DrinkSwitcher from "../../components/user/buttons/DrinkSwitcher";
 
 export default function Home() {
   const { changeDrink } = useDrink();
@@ -40,23 +40,20 @@ export default function Home() {
           <div className="flex flex-col items-center mb-6">
             <button
               onClick={() => setBottleCount((prev) => Math.min(prev + 1, 50))}
-              className="text-2xl font-bold hover:text-burgundy/80"
-            >
+              className="text-2xl font-bold hover:text-burgundy/80">
               ▲
             </button>
             <span className="text-2xl font-semibold my-2">{bottleCount}</span>
             <button
               onClick={() => setBottleCount((prev) => Math.max(prev - 1, 1))}
-              className="text-2xl font-bold hover:text-burgundy/80"
-            >
+              className="text-2xl font-bold hover:text-burgundy/80">
               ▼
             </button>
           </div>
 
           <button
             onClick={handleBottleCountSelection}
-            className="mt-2 px-8 py-3 bg-burgundy text-white rounded-lg hover:bg-burgundy/80 transition-all"
-          >
+            className="mt-2 px-8 py-3 bg-burgundy text-white rounded-lg hover:bg-burgundy/80 transition-all">
             Start Tasting
           </button>
         </div>

@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
-import NavSpacer from "../components/shared/layout/NavSpacer";
-import WineEntryForm from "../components/shared/forms/entry/WineEntryForm";
+import { Link } from "react-router-dom";
+import NavSpacer from "../../../components/shared/layout/NavSpacer";
+import WineEntryForm from "../../../components/shared/forms/entry/WineEntryForm";
 
 export default function InventoryPage() {
-  const [activeTab, setActiveTab] = useState("toTaste");
   const [showForm, setShowForm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [wineData, setWineData] = useState({});
   const [inventory, setInventory] = useState([]);
 
   const tabs = [
-    { id: "toTaste", label: "To Taste" },
-    { id: "tastings", label: "Tastings" },
-    { id: "showdowns", label: "Showdowns" },
-    { id: "buyAgain", label: "Buy Again" },
+    { id: "toTaste", label: "To Taste", path: "/inventory/to-taste" },
+    { id: "tastings", label: "Tastings", path: "/inventory/tastings" },
+    { id: "showdowns", label: "Showdowns", path: "/inventory/showdowns" },
+    { id: "buyAgain", label: "Buy Again", path: "/inventory/buy-again" },
   ];
 
   const handleAddWine = () => {
@@ -42,17 +42,11 @@ export default function InventoryPage() {
 
       <div className="flex flex-wrap justify-center gap-2 mb-4">
         {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors duration-200 ${
-              activeTab === tab.id
-                ? "bg-pink-600 text-white border-pink-600"
-                : "bg-white text-pink-600 border-pink-300 hover:bg-pink-100"
-            }`}
-          >
-            {tab.label}
-          </button>
+          <Link key={tab.id} to={tab.path}>
+            <button className="px-4 py-2 rounded-full text-sm font-medium border bg-white text-pink-600 border-pink-300 hover:bg-pink-100 transition-colors duration-200">
+              {tab.label}
+            </button>
+          </Link>
         ))}
       </div>
 
@@ -84,29 +78,6 @@ export default function InventoryPage() {
           Wine entered successfully! Go to "To Taste" to view your wines!
         </div>
       )}
-
-      <div className="bg-white p-4 rounded-xl shadow-md">
-        {activeTab === "toTaste" && (
-          <div>
-            {inventory.filter((wine) => wine.tasted === false).length === 0 ? (
-              <p className="text-center text-gray-600">Wines you plan to taste will go here.</p>
-            ) : (
-              <ul className="space-y-2">
-                {inventory
-                  .filter((wine) => wine.tasted === false)
-                  .map((wine, index) => (
-                    <li key={index} className="border p-2 rounded shadow-sm">
-                      <strong>{wine.name}</strong> - {wine.type} ({wine.color})
-                    </li>
-                  ))}
-              </ul>
-            )}
-          </div>
-        )}
-        {activeTab === "tastings" && <p className="text-center text-gray-600">Your single wine tastings will show here.</p>}
-        {activeTab === "showdowns" && <p className="text-center text-gray-600">Showdown results coming soon!</p>}
-        {activeTab === "buyAgain" && <p className="text-center text-gray-600">Your favorite wines live here 🍷</p>}
-      </div>
     </div>
   );
 }

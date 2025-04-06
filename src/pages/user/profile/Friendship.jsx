@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import NavSpacer from "../components/shared/layout/NavSpacer";
-import FriendList from "../components/user/friends/FriendList";
-import AddFriendButton from "../components/user/friends/AddFriendButton";
-import InviteFriendModal from "../components/user/friends/InviteFriendModal";
+import NavSpacer from "../../../components/shared/layout/NavSpacer";
+import FriendList from "../../../components/user/friends/FriendList";
+import AddFriendButton from "../../../components/user/friends/AddFriendButton";
+import InviteFriendModal from "../../../components/user/friends/InviteFriendModal";
 // import PendingFriendRequests from "../components/user/friends/PendingFriendRequests";
 
 export default function Friendship() {
@@ -31,17 +31,19 @@ export default function Friendship() {
       <div>
         <a
           href="/dashboard"
-          className="text-sm text-gray-400 underline hover:text-white"
-        >
+          className="text-sm text-gray-400 underline hover:text-white">
           ← Back to Dashboard
         </a>
       </div>
 
       {/* Title and Subtitle */}
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold text-pink-400">Friendship Management</h1>
+        <h1 className="text-3xl font-bold text-pink-400">
+          Friendship Management
+        </h1>
         <p className="text-gray-300 text-sm">
-          You have <span className="font-semibold">{mockFriends.length}</span> friends
+          You have <span className="font-semibold">{mockFriends.length}</span>{" "}
+          friends
         </p>
       </div>
 
@@ -70,7 +72,9 @@ export default function Friendship() {
               {filteredFriends.length > 0 ? (
                 <FriendList friends={filteredFriends} />
               ) : (
-                <p className="text-sm text-gray-400 italic">No friends found.</p>
+                <p className="text-sm text-gray-400 italic">
+                  No friends found.
+                </p>
               )}
             </div>
           )}
@@ -101,8 +105,7 @@ export default function Friendship() {
         </h2>
         <button
           onClick={handleInviteClick}
-          className="bg-pink-600 hover:bg-pink-700 text-white py-2 px-6 rounded-xl shadow transition-all duration-300"
-        >
+          className="bg-pink-600 hover:bg-pink-700 text-white py-2 px-6 rounded-xl shadow transition-all duration-300">
           🎉 Invite to Tasting Party
         </button>
         {showInviteModal && <InviteFriendModal onClose={handleCloseModal} />}
