@@ -1,51 +1,97 @@
 import React, { useState } from "react";
-import { useDrink } from "../../../contexts/DrinkContext";
-import Layout from "../../../components/shared/layout/Layout";
-import NavSpacer from "../../../components/shared/layout/NavSpacer";
-import WineEntryForm from "../../../components/shared/forms/entry/WineEntryForm";
-import BeerEntryForm from "../../../components/shared/forms/entry/BeerEntryForm";
-import CocktailEntryForm from "../../../components/shared/forms/entry/CocktailEntryForm";
+import RatingStars from "../../../components/shared/forms/reviews/details/RatingStars";
+import TastingTags from "../../../components/shared/forms/reviews/details/TastingTags";
+import WouldBuyAgainToggle from "../../../components/shared/forms/reviews/details/WouldBuyToggle";
 
-export default function SingleTasting() {
-  const { drinkType } = useDrink();
-  const [formData, setFormData] = useState({});
+export default function WineReview({ drink }) {
+  const [rating, setRating] = useState(0);
+  const [notes, setNotes] = useState("");
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [wouldBuyAgain, setWouldBuyAgain] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleAdd = () => {
-    // For now, we can just log the data — later you could navigate or show a confirmation
-    console.log("Single wine entry submitted:", formData);
-    alert("Wine entry saved! 🎉");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const reviewData = {
+      drinkId: drink.id,
+      name: drink.name,
+      rating,
+      notes,
+      selectedTags,
+      wouldBuyAgain,
+    };
+
+    console.log("Review Submitted:", reviewData);
+    setSubmitted(true);
   };
 
   return (
-    <Layout>
-      <NavSpacer />
-      {drinkType === "wine" && (
-        <WineEntryForm
-          wineData={formData}
-          onChange={setFormData}
-          onAdd={handleAdd}
-          showAddButton={true}
-        />
-      )}
-      {drinkType === "beer" && (
-        <BeerEntryForm
-          beerData={formData}
-          onChange={setFormData}
-          // Placeholder if you want a similar button for beer
-        />
-      )}
-      {drinkType === "cocktail" && (
-        <CocktailEntryForm
-          cocktailData={formData}
-          onChange={setFormData}
-          // Placeholder if you want a similar button for cocktails
-        />
-      )}
-      {!drinkType && (
-        <div className="text-center mt-12 text-burgundy text-xl font-medium">
-          Please select a drink type from the home screen.
+    <div className="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow-md">
+      {submitted ? (
+        <div className="text-center text-burgundy">
+          <h2 className="text-2xl font-bold mb-4">Thanks for your review! 🍷</h2>
+          <p className="italic">Your tasting notes have been saved.</p>
         </div>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <h2 className="text-2xl font-bold text-burgundy mb-6 text-center">
+            Tasting Review
+          </h2>
+
+          {/* Rating */}
+          <div className="mb-4">
+            <label className="block text-burgundy font-medium mb-1">
+              Your Rating
+            </label>
+            <RatingStars value={rating} onChange={setRating} />
+          </div>
+
+          {/* Notes */}
+          <div className="mb-4">
+            <label className="block text-burgundy font-medium mb-1">
+              Tasting Notes
+            </label>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="What did you taste? What stood out?"
+              className="w-full p-3 border border-gray-300 rounded-lg"
+              rows={4}
+            />
+          </div>
+
+          {/* Tags */}
+          <div className="mb-4">
+            <label className="block text-burgundy font-medium mb-1">
+              Tasting Tags
+            </label>
+            <TastingTags
+              selectedTags={selectedTags}
+              setSelectedTags={setSelectedTags}
+            />
+          </div>
+
+          {/* Would Buy Again */}
+          <div className="mb-6">
+            <label className="block text-burgundy font-medium mb-1">
+              Would You Buy Again?
+            </label>
+            <WouldBuyAgainToggle
+              value={wouldBuyAgain}
+              onChange={setWouldBuyAgain}
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-burgundy text-white py-3 rounded-full font-semibold hover:bg-pink-700 transition"
+          >
+            ✅ Done – Save My Review
+          </button>
+        </form>
       )}
-    </Layout>
+    </div>
   );
 }

@@ -7,7 +7,6 @@ export default function InventoryPage() {
   const [showForm, setShowForm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [wineData, setWineData] = useState({});
-  const [inventory, setInventory] = useState([]);
 
   const tabs = [
     { id: "toTaste", label: "To Taste", path: "/inventory/to-taste" },
@@ -23,7 +22,7 @@ export default function InventoryPage() {
 
   const handleSaveWine = () => {
     if (!wineData.color || !wineData.type || !wineData.name) return;
-    setInventory((prev) => [...prev, { ...wineData, tasted: false }]);
+    // Save logic here — likely should lift inventory to context or parent state in final version
     setShowForm(false);
     setShowSuccess(true);
   };
@@ -36,9 +35,9 @@ export default function InventoryPage() {
   }, [showSuccess]);
 
   return (
-    <div className="p-4 max-w-md mx-auto">
+    <div className="p-4 max-w-md mx-auto min-h-screen bg-pink-50">
       <NavSpacer />
-      <h1 className="text-2xl font-bold mb-4 text-center">Your Inventory</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center text-pink-800">Your Inventory</h1>
 
       <div className="flex flex-wrap justify-center gap-2 mb-4">
         {tabs.map((tab) => (
@@ -67,7 +66,7 @@ export default function InventoryPage() {
               onChange={setWineData}
               onAdd={handleSaveWine}
               onClose={() => setShowForm(false)}
-              inventory={inventory}
+              inventory={[]} // Pass real inventory if needed later
             />
           </div>
         </div>
