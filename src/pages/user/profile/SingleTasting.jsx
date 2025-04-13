@@ -1,96 +1,87 @@
 import React, { useState } from "react";
-import RatingStars from "../../../components/shared/forms/reviews/details/RatingStars";
-import TastingTags from "../../../components/shared/forms/reviews/details/TastingTags";
-import WouldBuyAgainToggle from "../../../components/shared/forms/reviews/details/WouldBuyToggle";
+import WineData from "../inventory/WineInventoryData"; // adjust path
+import placeHolder from "../../../assets/images/emptyWine.jpeg"; // adjust path
+import WineModal from "../../../components/shared/modals/WineModal"; // this will be a modal component
+import { motion } from "framer-motion";
 
-export default function WineReview({ drink }) {
-  const [rating, setRating] = useState(0);
-  const [notes, setNotes] = useState("");
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [wouldBuyAgain, setWouldBuyAgain] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+export default function SingleTastingPage() {
+  const [selectedWine, setSelectedWine] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tastingStarted, setTastingStarted] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleWineSelect = (e) => {
+    const wineId = parseInt(e.target.value);
+    const wine = WineData.find((w) => w.id === wineId);
+    setSelectedWine(wine);
+  };
 
-    const reviewData = {
-      drinkId: drink.id,
-      name: drink.name,
-      rating,
-      notes,
-      selectedTags,
-      wouldBuyAgain,
-    };
-
-    console.log("Review Submitted:", reviewData);
-    setSubmitted(true);
+  const startTasting = () => {
+    setTastingStarted(true);
+    // Here’s where you could add a timestamp or redirect to the tasting form
+    console.log("Tasting started:", new Date().toISOString());
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow-md">
-      {submitted ? (
-        <div className="text-center text-burgundy">
-          <h2 className="text-2xl font-bold mb-4">Thanks for your review! 🍷</h2>
-          <p className="italic">Your tasting notes have been saved.</p>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <h2 className="text-2xl font-bold text-burgundy mb-6 text-center">
-            Tasting Review
-          </h2>
+    <div className="p-4 max-w-md mx-auto text-center">
+      <h1 className="text-2xl font-bold mb-2">🍷 Welcome to Your Single Bottle Tasting</h1>
+      <p className="text-sm text-gray-500 mb-6">
+        Select a wine and begin your tasting journey!
+      </p>
 
-          {/* Rating */}
-          <div className="mb-4">
-            <label className="block text-burgundy font-medium mb-1">
-              Your Rating
-            </label>
-            <RatingStars value={rating} onChange={setRating} />
-          </div>
+      {!selectedWine && (
+        <select
+          onChange={handleWineSelect}
+          className="w-full mb-4 p-2 border border-gray-300 rounded"
+        >
+          <option value="">Select a wine from your inventory</option>
+          {WineData.map((wine) => (
+            <option key={wine.id} value={wine.id}>
+              {wine.brand} - {wine.name} ({wine.year})
+            </option>
+          ))}
+        </select>
+      )}
 
-          {/* Notes */}
-          <div className="mb-4">
-            <label className="block text-burgundy font-medium mb-1">
-              Tasting Notes
-            </label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="What did you taste? What stood out?"
-              className="w-full p-3 border border-gray-300 rounded-lg"
-              rows={4}
-            />
-          </div>
+      {selectedWine && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white shadow-md rounded-lg p-4 mb-4 border border-gray-200"
+        >
+          <img
+            src={selectedWine.labelPhoto || placeHolder}
+            alt={selectedWine.name}
+            className="w-full h-48 object-cover rounded cursor-pointer mb-3"
+            onClick={() => setIsModalOpen(true)}
+          />
+          <h2 className="text-lg font-semibold">{selectedWine.name}</h2>
+          <p className="text-sm text-gray-600">{selectedWine.type} · {selectedWine.color}</p>
+        </motion.div>
+      )}
 
-          {/* Tags */}
-          <div className="mb-4">
-            <label className="block text-burgundy font-medium mb-1">
-              Tasting Tags
-            </label>
-            <TastingTags
-              selectedTags={selectedTags}
-              setSelectedTags={setSelectedTags}
-            />
-          </div>
+      {selectedWine && !tastingStarted && (
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={startTasting}
+          className="bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 px-4 rounded-xl shadow-md"
+        >
+          🍷 Start Drinking Your Wine!
+        </motion.button>
+      )}
 
-          {/* Would Buy Again */}
-          <div className="mb-6">
-            <label className="block text-burgundy font-medium mb-1">
-              Would You Buy Again?
-            </label>
-            <WouldBuyAgainToggle
-              value={wouldBuyAgain}
-              onChange={setWouldBuyAgain}
-            />
-          </div>
+      {tastingStarted && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-6 text-green-600 font-medium"
+        >
+          🎉 Tasting started! Your review is now being tracked.
+        </motion.p>
+      )}
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-burgundy text-white py-3 rounded-full font-semibold hover:bg-pink-700 transition"
-          >
-            ✅ Done – Save My Review
-          </button>
-        </form>
+      {isModalOpen && selectedWine && (
+        <WineModal wine={selectedWine} onClose={() => setIsModalOpen(false)} />
       )}
     </div>
   );
