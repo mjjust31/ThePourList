@@ -9,7 +9,7 @@ export default function InventoryPage() {
   const [wineData, setWineData] = useState({});
 
   const tabs = [
-    { id: "toTaste", label: "To Taste", path: "/inventory/to-taste" },
+    { id: "toTaste", label: "Saved Wines", path: "/inventory/to-taste" },
     { id: "tastings", label: "Tastings", path: "/inventory/tastings" },
     { id: "showdowns", label: "Showdowns", path: "/inventory/showdowns" },
     { id: "buyAgain", label: "Buy Again", path: "/inventory/buy-again" },
@@ -37,7 +37,9 @@ export default function InventoryPage() {
   return (
     <div className="p-4 max-w-md mx-auto min-h-screen bg-pink-50">
       <NavSpacer />
-      <h1 className="text-2xl font-bold mb-4 text-center text-pink-800">Your Inventory</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center text-pink-800">
+        Your Inventory
+      </h1>
 
       <div className="flex flex-wrap justify-center gap-2 mb-4">
         {tabs.map((tab) => (
@@ -47,15 +49,6 @@ export default function InventoryPage() {
             </button>
           </Link>
         ))}
-      </div>
-
-      <div className="flex justify-center mb-4">
-        <button
-          onClick={handleAddWine}
-          className="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 shadow-md"
-        >
-          + Add a New Wine
-        </button>
       </div>
 
       {showForm && (

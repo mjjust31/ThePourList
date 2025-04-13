@@ -32,7 +32,7 @@ const WineData = [
   },
   {
     id: 3,
-    color: "Rosé",
+    color: "Red",
     wineType: "Grenache",
     wineBrand: "Cupcake Vineyards",
     year: 2023,
@@ -122,7 +122,7 @@ const WineData = [
   },
   {
     id: 9,
-    color: "Rosé",
+    color: "Red",
     wineType: "Pinot Noir",
     wineBrand: "A to Z Wineworks",
     year: 2022,
@@ -298,6 +298,21 @@ const WineData = [
     grapeOrigin: "California",
     wineLabelPhoto: placeHolder,
     dateAdded: "2025-01-25T12:00:00Z",
+    tastings: []
+  },
+  {
+    id: 21,
+    color: "Dessert",
+    wineType: "Port",
+    wineBrand: "Coppola",
+    year: 2022,
+    price: 16.99,
+    locationPurchased: "Grocery Store",
+    locationName: "Trader Joe's",
+    sweetness: "Dry",
+    grapeOrigin: "California",
+    wineLabelPhoto: placeHolder,
+    dateAdded: "2025-01-28T12:00:00Z",
     tastings: []
   }
 ];
