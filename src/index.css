@@ -39,14 +39,14 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
 }
 
-/* Buttons - TEMPORARY reset to prevent global red/white */
+/* Buttons - SAFE default reset */
 button {
-  all: unset;
   font-family: inherit;
   cursor: pointer;
+  /* Do NOT use all: unset - Tailwind needs basic styles */
 }
 
-/* Add minimal default hover if needed */
+/* Optional: Hover underline for plain text buttons (can remove if not needed) */
 button:hover {
-  text-decoration: underline;
+  text-decoration:wavy;
 }

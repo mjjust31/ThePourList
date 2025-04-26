@@ -11,7 +11,7 @@ export default function AddToInventoryButton({ onClick, disabled = false, label 
         type="button"
         onClick={handleClick}
         disabled={disabled}
-        className="bg-burgundy text-white px-6 py-2 rounded hover:bg-burgundy/80 transition-all disabled:opacity-50"
+        className="bg-pink-700 text-white px-6 py-3 rounded-full hover:bg-pink-800 transition-all disabled:opacity-50 shadow-md"
       >
         {label}
       </button>

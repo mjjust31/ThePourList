@@ -109,19 +109,22 @@ export default function ToTasteDashboard() {
 
       {selectedWines.length > 0 && (
         <div className="mb-4 text-center">
-          <Link
-            to={
-              selectedWines.length === 1
-                ? "/single-tasting"
-                : "/showdown-tasting"
-            }
-          >
-            <button className="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700 shadow">
-              {selectedWines.length === 1
-                ? "Start Tasting (1)"
-                : `Start Showdown Tasting (${selectedWines.length})`}
-            </button>
-          </Link>
+          {selectedWines.length === 1 ? (
+            <Link
+              to="/single-tasting"
+              state={{ selectedWineId: selectedWines[0].id }}
+            >
+              <button className="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700 shadow">
+                Start Tasting (1)
+              </button>
+            </Link>
+          ) : (
+            <Link to="/showdown-tasting">
+              <button className="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700 shadow">
+                Start Showdown Tasting ({selectedWines.length})
+              </button>
+            </Link>
+          )}
         </div>
       )}
 
