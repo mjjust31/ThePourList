@@ -29,7 +29,7 @@ export default function Home() {
         </button>
 
         <button
-          onClick={() => navigate("/pourfile")}
+          onClick={() => navigate("/profile")}
           className="w-full bg-white text-rose-800 font-semibold py-4 rounded-lg shadow hover:bg-gray-100 transition"
         >
           🧑‍💼 Go to Your Pourfile

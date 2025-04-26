@@ -18,7 +18,7 @@ export default function SingleTastingPage() {
   const [inventory, setInventory] = useState([...WineData]);
   const [selectedWine, setSelectedWine] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [phase, setPhase] = useState("setup"); // 'setup' | 'loading' | 'review'
+  const [phase, setPhase] = useState("setup");
   const [countdown, setCountdown] = useState(30);
   const [currentTrivia, setCurrentTrivia] = useState("");
 
@@ -62,7 +62,6 @@ export default function SingleTastingPage() {
         const factIndex = Math.floor((30 - countdown) / 10) % wineTrivia.length;
         setCurrentTrivia(wineTrivia[factIndex]);
       }
-
       if (countdown === 0) {
         setPhase("review");
       }
@@ -77,7 +76,7 @@ export default function SingleTastingPage() {
 
   const startTasting = () => {
     if (selectedWine) {
-      setInventory((prevInventory) =>
+      setInventory((prevInventory) => 
         prevInventory.filter((wine) => wine.id !== selectedWine.id)
       );
       setPhase("loading");
@@ -89,31 +88,35 @@ export default function SingleTastingPage() {
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto text-center">
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 py-10 px-4">
       <NavSpacer />
 
-      {/* Setup Phase */}
-      {phase === "setup" && (
-        <>
-          <h1 className="text-2xl font-bold mb-1">🍷 Single Bottle Tasting</h1>
-          <p className="text-sm text-gray-500 mb-4">Choose a wine to begin.</p>
+      <div className="max-w-xl mx-auto bg-white rounded-3xl shadow-2xl p-8 text-center">
+        {/* Setup Phase */}
+        {phase === "setup" && (
+          <>
+            <h1 className="text-3xl font-bold text-rose-800 mb-2">
+              🍷 Single Bottle Tasting
+            </h1>
+            <p className="text-gray-500 mb-6">
+              Choose a wine to begin your tasting.
+            </p>
 
-          {!selectedWine && (
-            <div className="mb-6">
-              <p className="text-red-500 text-sm mb-2">
-                No wine selected yet. Do you want to view your inventory?
-              </p>
-              <button
-                onClick={goBackToInventory}
-                className="mt-2 text-pink-600 underline text-xs"
-              >
-                🔙 Back to Inventory
-              </button>
+            {!selectedWine && (
+              <>
+                <p className="text-red-600 mb-4 text-sm">
+                  No wine selected yet.
+                </p>
+                <button
+                  onClick={goBackToInventory}
+                  className="text-rose-700 font-semibold hover:underline mb-6"
+                >
+                  🔙 Back to Your Inventory
+                </button>
 
-              <div className="mt-4">
                 <select
                   onChange={handleWineSelect}
-                  className="w-full p-2 border border-gray-300 rounded text-sm"
+                  className="w-full p-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-rose-300"
                 >
                   <option value="">Select a wine from your inventory</option>
                   {sortedInventory.map((wine) => (
@@ -125,87 +128,83 @@ export default function SingleTastingPage() {
                     </option>
                   ))}
                 </select>
-              </div>
-            </div>
-          )}
+              </>
+            )}
 
-          {selectedWine && (
-            <>
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white shadow rounded-lg p-4 mb-4 border border-gray-100"
-              >
-                <img
-                  src={selectedWine.wineLabelPhoto || placeHolder}
-                  alt={selectedWine.wineBrand}
-                  className="w-full h-48 object-cover rounded-md mb-3"
-                  onClick={() => setIsModalOpen(true)}
-                />
-                <h2 className="text-lg font-semibold">{selectedWine.wineBrand}</h2>
-                <p className="text-sm text-gray-600">
-                  {selectedWine.color} · {selectedWine.wineType}
-                  {selectedWine.year ? ` · ${selectedWine.year}` : ""}
-                </p>
-              </motion.div>
+            {selectedWine && (
+              <>
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-gray-100 rounded-xl p-6 mb-6"
+                >
+                  <img
+                    src={selectedWine.wineLabelPhoto || placeHolder}
+                    alt={selectedWine.wineBrand}
+                    className="w-full h-48 object-cover rounded-md mb-4"
+                    onClick={() => setIsModalOpen(true)}
+                  />
+                  <h2 className="text-xl font-bold text-rose-700">{selectedWine.wineBrand}</h2>
+                  <p className="text-gray-600 text-sm">
+                    {selectedWine.color} · {selectedWine.wineType}
+                    {selectedWine.year ? ` · ${selectedWine.year}` : ""}
+                  </p>
+                </motion.div>
 
-              {/* Choose a Different Wine Link */}
-              <div className="mb-6">
                 <button
                   onClick={goBackToInventory}
-                  className="text-pink-600 underline text-xs"
+                  className="text-sm text-rose-700 font-semibold mb-6 hover:underline"
                 >
                   🔄 Choose a Different Wine
                 </button>
-              </div>
 
-              {/* Start Tasting Button */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="fixed bottom-4 left-0 right-0 px-4 z-10"
-              >
-                <button
-                  onClick={startTasting}
-                  className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl text-base font-semibold shadow-lg"
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4"
                 >
-                  🍷 Start Tasting!
-                </button>
-              </motion.div>
-            </>
-          )}
-        </>
-      )}
+                  <button
+                    onClick={startTasting}
+                    className="w-full bg-rose-800 hover:bg-rose-700 text-white py-4 rounded-full text-lg font-bold shadow-lg transition-all"
+                  >
+                    🍷 Start Tasting!
+                  </button>
+                </motion.div>
+              </>
+            )}
+          </>
+        )}
 
-      {/* Loading Phase */}
-      {phase === "loading" && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mt-20"
-        >
-          <h2 className="text-2xl font-bold mb-2">⏳ Sip & Savor...</h2>
-          <p className="text-gray-500 mb-6">Tasting in progress. Please enjoy your wine!</p>
-          <p className="text-3xl font-semibold mb-4">{countdown}s</p>
-          <p className="text-pink-600 text-lg">{currentTrivia}</p>
-        </motion.div>
-      )}
+        {/* Loading Phase */}
+        {phase === "loading" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col items-center justify-center mt-20 space-y-6"
+          >
+            <h2 className="text-3xl font-bold text-rose-800">⏳ Sip & Savor...</h2>
+            <p className="text-gray-500">Enjoy your tasting moment!</p>
+            <p className="text-5xl font-bold">{countdown}s</p>
+            <p className="text-rose-600 text-lg">{currentTrivia}</p>
+          </motion.div>
+        )}
 
-      {/* Review Phase */}
-      {phase === "review" && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mt-10"
-        >
-          <WineReview wine={selectedWine} />
-        </motion.div>
-      )}
+        {/* Review Phase */}
+        {phase === "review" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-10"
+          >
+            <WineReview wine={selectedWine} />
+          </motion.div>
+        )}
 
-      {/* Wine Modal */}
-      {isModalOpen && selectedWine && (
-        <WineModal wine={selectedWine} onClose={() => setIsModalOpen(false)} />
-      )}
+        {/* Wine Modal */}
+        {isModalOpen && selectedWine && (
+          <WineModal wine={selectedWine} onClose={() => setIsModalOpen(false)} />
+        )}
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useDrink } from "../../../contexts/DrinkContext"; // Import the context
+import { useDrink } from "../../../contexts/DrinkContext"; 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 
@@ -8,7 +8,6 @@ export default function NavBar() {
   const { drinkType } = useDrink();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Toggle menu open/close
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
@@ -16,85 +15,68 @@ export default function NavBar() {
   return (
     <>
       {/* Nav Container */}
-      <nav className="flex justify-between items-center p-4 bg-gray-800 text-white fixed top-0 left-0 right-0 z-50 w-full">
+      <nav className="flex justify-between items-center px-6 py-4 bg-gray-800 text-white fixed top-0 left-0 right-0 z-50 w-full">
+        
         {/* Notification Icon */}
         <div className="relative">
-          <button className="text-white text-xl">
+          <button className="text-white text-xl relative">
             <FontAwesomeIcon icon={faBell} />
-            <span className="absolute top-0 right-0 text-xs bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 text-xs bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
               3
             </span>
           </button>
         </div>
 
-        <Link
-          to="/"
-          className="text-xl font-semibold text-white flex items-center gap-2">
+        {/* Brand Logo */}
+        <Link to="/" className="flex items-center gap-2 text-xl font-semibold hover:no-underline">
           🍷 <span>The Pour List</span>
         </Link>
 
-        {/* Hamburger Button */}
-        <button onClick={toggleMenu} className="lg:hidden text-white">
-          {isMenuOpen ? "X" : "☰"}
+        {/* Hamburger Button for Mobile */}
+        <button onClick={toggleMenu} className="lg:hidden text-white text-2xl">
+          {isMenuOpen ? "✕" : "☰"}
         </button>
       </nav>
 
-      {/* Faded Overlay (semi-transparent to allow background to be seen) */}
+      {/* Faded Overlay */}
       {isMenuOpen && (
         <div
-          className="fixed inset-0 bg-gray-900 bg-opacity-30 z-40"
+          className="fixed inset-0 bg-black bg-opacity-30 z-40"
           onClick={toggleMenu}
         />
       )}
 
-      {/* Offcanvas Menu */}
+      {/* Mobile Offcanvas Menu */}
       {isMenuOpen && (
-        <div className="fixed top-0 right-0 h-full w-64 z-50 bg-gray-700 text-white">
-          {/* Menu Header */}
-          <div className="flex justify-between items-center p-4 bg-gray-600">
-            <h2>Menu</h2>
-            <button onClick={toggleMenu}>Close</button>
+        <div className="fixed top-0 right-0 h-full w-64 z-50 bg-gray-700 text-white shadow-lg p-6 flex flex-col">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-lg font-semibold"></h2>
+            <button onClick={toggleMenu} className="text-xl">✕</button>
           </div>
 
           {/* Menu Items */}
-          <div className="flex flex-col p-6 space-y-4">
-            <Link to="/" className="hover:text-yellow-400" onClick={toggleMenu}>
+          <div className="flex flex-col gap-6 text-lg">
+            <Link to="/" className="hover:text-yellow-400 hover:no-underline py-2" onClick={toggleMenu}>
               Home
             </Link>
 
-            {/* Add Wine Cellar Link */}
-            <Link
-              to="/inventory"
-              className="hover:text-yellow-400"
-              onClick={toggleMenu}>
+            <Link to="/inventory" className="hover:text-yellow-400 hover:no-underline py-2" onClick={toggleMenu}>
               Wine Cellar
             </Link>
 
-            <Link
-              to="/profile"
-              className="hover:text-yellow-400"
-              onClick={toggleMenu}>
+            <Link to="/profile" className="hover:text-yellow-400 hover:no-underline py-2" onClick={toggleMenu}>
               My {drinkType ? `${drinkType}` : "Drink"} Profile
             </Link>
 
-            <Link
-              to="/single-tasting"
-              className="hover:text-yellow-400"
-              onClick={toggleMenu}>
+            <Link to="/single-tasting" className="hover:text-yellow-400 hover:no-underline py-2" onClick={toggleMenu}>
               Single {drinkType ? `${drinkType}` : "Drink"} Tasting
             </Link>
 
-            <Link
-              to="/showdown"
-              className="hover:text-yellow-400"
-              onClick={toggleMenu}>
+            <Link to="/showdown" className="hover:text-yellow-400 hover:no-underline py-2" onClick={toggleMenu}>
               {drinkType ? `${drinkType}` : "Drink"} Showdown
             </Link>
 
-            <Link
-              to="/events"
-              className="hover:text-yellow-400"
-              onClick={toggleMenu}>
+            <Link to="/events" className="hover:text-yellow-400 hover:no-underline py-2" onClick={toggleMenu}>
               My Events
             </Link>
           </div>
@@ -102,31 +84,23 @@ export default function NavBar() {
       )}
 
       {/* Desktop Menu */}
-      <div className="hidden lg:flex lg:justify-center lg:space-x-6 lg:p-4 lg:bg-gray-800 lg:text-white lg:fixed lg:top-0 lg:left-0 lg:right-0 lg:z-50">
-        <Link to="/" className="hover:text-yellow-400">
+      <div className="hidden lg:flex justify-center space-x-8 bg-gray-800 text-white fixed top-0 left-0 right-0 z-50 py-4">
+        <Link to="/" className="hover:text-yellow-400 hover:no-underline text-lg px-4 py-2">
           Home
         </Link>
-        <Link to="/wine-cellar" className="hover:text-yellow-400">
+        <Link to="/inventory" className="hover:text-yellow-400 hover:no-underline text-lg px-4 py-2">
           Wine Cellar
         </Link>
-        <Link
-          to="/profile"
-          className="hover:text-yellow-400">
+        <Link to="/profile" className="hover:text-yellow-400 hover:no-underline text-lg px-4 py-2">
           My {drinkType ? `${drinkType}` : "Drink"} Profile
         </Link>
-        <Link
-          to="/tasting"
-          className="hover:text-yellow-400">
+        <Link to="/tasting" className="hover:text-yellow-400 hover:no-underline text-lg px-4 py-2">
           Single {drinkType ? `${drinkType}` : "Drink"} Tasting
         </Link>
-        <Link
-          to="/showdown"
-          className="hover:text-yellow-400">
+        <Link to="/showdown" className="hover:text-yellow-400 hover:no-underline text-lg px-4 py-2">
           {drinkType ? `${drinkType}` : "Drink"} Showdown
         </Link>
-        <Link
-          to="/events"
-          className="hover:text-yellow-400">
+        <Link to="/events" className="hover:text-yellow-400 hover:no-underline text-lg px-4 py-2">
           My Events
         </Link>
       </div>
