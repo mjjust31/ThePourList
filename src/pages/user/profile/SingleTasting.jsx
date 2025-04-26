@@ -6,13 +6,7 @@ import WineModal from "../../../components/shared/modals/WineModal";
 import WineReview from "../../../components/user/review/singleEntry/WineReview";
 import { motion } from "framer-motion";
 import NavSpacer from "../../../components/shared/layout/NavSpacer";
-
-// Mock trivia facts
-const wineTrivia = [
-  "🍇 Did you know? The oldest known wine cellar was on the Titanic!",
-  "🍷 Red wines typically age better than white wines.",
-  "🌍 Over 10,000 varieties of wine grapes exist worldwide!",
-];
+import WineTrivia from "../../../components/shared/data/WineTrivia";
 
 export default function SingleTastingPage() {
   const [inventory, setInventory] = useState([...WineData]);
@@ -46,7 +40,7 @@ export default function SingleTastingPage() {
 
   useEffect(() => {
     if (phase === "loading") {
-      setCurrentTrivia(wineTrivia[0]);
+      setCurrentTrivia(WineTrivia[0]);
 
       const timer = setInterval(() => {
         setCountdown((prev) => prev - 1);
@@ -59,8 +53,8 @@ export default function SingleTastingPage() {
   useEffect(() => {
     if (phase === "loading") {
       if (countdown % 10 === 0 && countdown !== 30 && countdown !== 0) {
-        const factIndex = Math.floor((30 - countdown) / 10) % wineTrivia.length;
-        setCurrentTrivia(wineTrivia[factIndex]);
+        const randomIndex = Math.floor(Math.random() * WineTrivia.length);
+        setCurrentTrivia(WineTrivia[randomIndex]);
       }
       if (countdown === 0) {
         setPhase("review");
@@ -76,7 +70,7 @@ export default function SingleTastingPage() {
 
   const startTasting = () => {
     if (selectedWine) {
-      setInventory((prevInventory) => 
+      setInventory((prevInventory) =>
         prevInventory.filter((wine) => wine.id !== selectedWine.id)
       );
       setPhase("loading");
@@ -109,15 +103,13 @@ export default function SingleTastingPage() {
                 </p>
                 <button
                   onClick={goBackToInventory}
-                  className="text-rose-700 font-semibold hover:underline mb-6"
-                >
+                  className="text-rose-700 font-semibold hover:underline mb-6">
                   🔙 Back to Your Inventory
                 </button>
 
                 <select
                   onChange={handleWineSelect}
-                  className="w-full p-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-rose-300"
-                >
+                  className="w-full p-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-rose-300">
                   <option value="">Select a wine from your inventory</option>
                   {sortedInventory.map((wine) => (
                     <option key={wine.id} value={wine.id}>
@@ -136,15 +128,16 @@ export default function SingleTastingPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-gray-100 rounded-xl p-6 mb-6"
-                >
+                  className="bg-gray-100 rounded-xl p-6 mb-6">
                   <img
                     src={selectedWine.wineLabelPhoto || placeHolder}
                     alt={selectedWine.wineBrand}
                     className="w-full h-48 object-cover rounded-md mb-4"
                     onClick={() => setIsModalOpen(true)}
                   />
-                  <h2 className="text-xl font-bold text-rose-700">{selectedWine.wineBrand}</h2>
+                  <h2 className="text-xl font-bold text-rose-700">
+                    {selectedWine.wineBrand}
+                  </h2>
                   <p className="text-gray-600 text-sm">
                     {selectedWine.color} · {selectedWine.wineType}
                     {selectedWine.year ? ` · ${selectedWine.year}` : ""}
@@ -153,20 +146,17 @@ export default function SingleTastingPage() {
 
                 <button
                   onClick={goBackToInventory}
-                  className="text-sm text-rose-700 font-semibold mb-6 hover:underline"
-                >
+                  className="text-sm text-rose-700 font-semibold mb-6 hover:underline">
                   🔄 Choose a Different Wine
                 </button>
 
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-4"
-                >
+                  className="mt-4">
                   <button
                     onClick={startTasting}
-                    className="w-full bg-rose-800 hover:bg-rose-700 text-white py-4 rounded-full text-lg font-bold shadow-lg transition-all"
-                  >
+                    className="w-full bg-rose-800 hover:bg-rose-700 text-white py-4 rounded-full text-lg font-bold shadow-lg transition-all">
                     🍷 Start Tasting!
                   </button>
                 </motion.div>
@@ -180,9 +170,10 @@ export default function SingleTastingPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center mt-20 space-y-6"
-          >
-            <h2 className="text-3xl font-bold text-rose-800">⏳ Sip & Savor...</h2>
+            className="flex flex-col items-center justify-center mt-20 space-y-6">
+            <h2 className="text-3xl font-bold text-rose-800">
+              ⏳ Sip & Savor...
+            </h2>
             <p className="text-gray-500">Enjoy your tasting moment!</p>
             <p className="text-5xl font-bold">{countdown}s</p>
             <p className="text-rose-600 text-lg">{currentTrivia}</p>
@@ -194,15 +185,17 @@ export default function SingleTastingPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mt-10"
-          >
+            className="mt-10">
             <WineReview wine={selectedWine} />
           </motion.div>
         )}
 
         {/* Wine Modal */}
         {isModalOpen && selectedWine && (
-          <WineModal wine={selectedWine} onClose={() => setIsModalOpen(false)} />
+          <WineModal
+            wine={selectedWine}
+            onClose={() => setIsModalOpen(false)}
+          />
         )}
       </div>
     </div>
