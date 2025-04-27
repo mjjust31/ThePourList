@@ -119,7 +119,7 @@ export default function ToTasteDashboard() {
               </button>
             </Link>
           ) : (
-            <Link to="/showdown-tasting">
+            <Link to="/showdown">
               <button className="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700 shadow">
                 Start Showdown Tasting ({selectedWines.length})
               </button>

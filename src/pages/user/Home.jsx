@@ -15,14 +15,14 @@ export default function Home() {
 
       <div className="flex flex-col items-center gap-6 w-full max-w-sm">
         <button
-          onClick={() => navigate("/add-wine")}
+          onClick={() => navigate("/inventory")}
           className="w-full bg-white text-rose-800 font-semibold py-4 rounded-lg shadow hover:bg-gray-100 transition"
         >
           ➕ Add Some Wines
         </button>
 
         <button
-          onClick={() => navigate("/inventory")}
+          onClick={() => navigate("/inventory/to-taste")}
           className="w-full bg-white text-rose-800 font-semibold py-4 rounded-lg shadow hover:bg-gray-100 transition"
         >
           🍷 Let's Begin Tasting
