@@ -9,7 +9,7 @@ const StartShowdownButton = ({ disabled, onClick }) => {
         ${
           disabled
             ? "bg-gray-400 cursor-not-allowed"
-            : "bg-burgundy hover:bg-burgundy/90"
+            : "bg-rose-700 hover:bg-rose-600 shadow-md"
         }`}
     >
       🍷 Start Showdown

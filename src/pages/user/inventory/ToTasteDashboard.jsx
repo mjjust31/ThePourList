@@ -58,8 +58,7 @@ export default function ToTasteDashboard() {
     );
   };
 
-  const isSelected = (wineId) =>
-    selectedWines.some((w) => w.id === wineId);
+  const isSelected = (wineId) => selectedWines.some((w) => w.id === wineId);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -112,14 +111,13 @@ export default function ToTasteDashboard() {
           {selectedWines.length === 1 ? (
             <Link
               to="/single-tasting"
-              state={{ selectedWineId: selectedWines[0].id }}
-            >
+              state={{ selectedWineId: selectedWines[0].id }}>
               <button className="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700 shadow">
                 Start Tasting (1)
               </button>
             </Link>
           ) : (
-            <Link to="/showdown">
+            <Link to="/showdown" state={{ selectedWines }}>
               <button className="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700 shadow">
                 Start Showdown Tasting ({selectedWines.length})
               </button>
@@ -131,15 +129,13 @@ export default function ToTasteDashboard() {
       <div className="flex justify-center gap-4 mb-4 flex-wrap">
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="px-4 py-2 text-sm bg-gray-200 text-black rounded shadow hover:bg-gray-300"
-        >
+          className="px-4 py-2 text-sm bg-gray-200 text-black rounded shadow hover:bg-gray-300">
           {showFilters ? "Hide Filters" : "Show Filters"}
         </button>
 
         <button
           onClick={() => setShowForm(true)}
-          className="px-4 py-2 text-sm bg-green-600 text-white rounded shadow hover:bg-green-700"
-        >
+          className="px-4 py-2 text-sm bg-green-600 text-white rounded shadow hover:bg-green-700">
           + Add New Wine
         </button>
       </div>
@@ -158,11 +154,12 @@ export default function ToTasteDashboard() {
             name="color"
             className="p-2 border rounded"
             value={filters.color}
-            onChange={handleFilterChange}
-          >
+            onChange={handleFilterChange}>
             <option value="">All Colors</option>
             {colorOrder.map((color) => (
-              <option key={color} value={color}>{color}</option>
+              <option key={color} value={color}>
+                {color}
+              </option>
             ))}
           </select>
 
@@ -172,11 +169,12 @@ export default function ToTasteDashboard() {
               name={key}
               className="p-2 border rounded"
               value={filters[key]}
-              onChange={handleFilterChange}
-            >
+              onChange={handleFilterChange}>
               <option value="">All {key}</option>
               {getUniqueOptions(key).map((option) => (
-                <option key={option} value={option}>{option}</option>
+                <option key={option} value={option}>
+                  {option}
+                </option>
               ))}
             </select>
           ))}
@@ -185,11 +183,12 @@ export default function ToTasteDashboard() {
             name="sweetness"
             className="p-2 border rounded"
             value={filters.sweetness}
-            onChange={handleFilterChange}
-          >
+            onChange={handleFilterChange}>
             <option value="">All Sweetness Levels</option>
             {["Dry", "Semi-Dry", "Semi-Sweet", "Sweet"].map((level) => (
-              <option key={level} value={level}>{level}</option>
+              <option key={level} value={level}>
+                {level}
+              </option>
             ))}
           </select>
 
@@ -197,20 +196,22 @@ export default function ToTasteDashboard() {
             name="locationPurchased"
             className="p-2 border rounded"
             value={filters.locationPurchased}
-            onChange={handleFilterChange}
-          >
+            onChange={handleFilterChange}>
             <option value="">All Locations</option>
-            {["Beverage Store", "Winery", "Grocery Store", "Other"].map((loc) => (
-              <option key={loc} value={loc}>{loc}</option>
-            ))}
+            {["Beverage Store", "Winery", "Grocery Store", "Other"].map(
+              (loc) => (
+                <option key={loc} value={loc}>
+                  {loc}
+                </option>
+              )
+            )}
           </select>
 
           <select
             name="price"
             className="p-2 border rounded"
             value={filters.price}
-            onChange={handleFilterChange}
-          >
+            onChange={handleFilterChange}>
             <option value="">All Prices</option>
             <option value="under-10">Under $10</option>
             <option value="10-20">$10–20</option>
@@ -224,18 +225,21 @@ export default function ToTasteDashboard() {
             name="year"
             className="p-2 border rounded"
             value={filters.year}
-            onChange={handleFilterChange}
-          >
+            onChange={handleFilterChange}>
             <option value="">All Years</option>
             {yearOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
           </select>
         </div>
       )}
 
       {sortedWines.length === 0 ? (
-        <p className="text-center text-gray-600">No wines available for selected filters.</p>
+        <p className="text-center text-gray-600">
+          No wines available for selected filters.
+        </p>
       ) : (
         <div className="overflow-y-auto max-h-[60vh] mt-4 px-1">
           {colorOrder.map((color) => {
@@ -250,9 +254,14 @@ export default function ToTasteDashboard() {
 
             return (
               <div key={color} className="mb-6">
-                <h2 className={`text-lg font-semibold px-3 py-2 mb-2 ${colorTextStyles[color]}`}>{color} Wines</h2>
+                <h2
+                  className={`text-lg font-semibold px-3 py-2 mb-2 ${colorTextStyles[color]}`}>
+                  {color} Wines
+                </h2>
                 {Object.entries(groupedByType).map(([type, wines]) => (
-                  <details key={type} className={`mb-3 rounded border ${borderColorStyles[color]} ${bgTintStyles[color]}`}>
+                  <details
+                    key={type}
+                    className={`mb-3 rounded border ${borderColorStyles[color]} ${bgTintStyles[color]}`}>
                     <summary className="px-4 py-2 cursor-pointer font-semibold flex justify-between items-center">
                       <span>{type}</span>
                       <span className="text-sm">QTY: {wines.length}</span>
@@ -261,27 +270,45 @@ export default function ToTasteDashboard() {
                       {wines.map((wine) => (
                         <details key={wine.id} className="border-t">
                           <summary className="p-2 cursor-pointer flex justify-between items-center">
-                            <span>{wine.wineBrand} – {wine.locationPurchased} – ${wine.price}</span>
+                            <span>
+                              {wine.wineBrand} – {wine.locationPurchased} – $
+                              {wine.price}
+                            </span>
                             <div className="flex flex-col items-end">
-                              <span className="text-xs italic text-gray-600">Click for more details</span>
+                              <span className="text-xs italic text-gray-600">
+                                Click for more details
+                              </span>
                               <button
                                 onClick={() => handleToggleTasting(wine)}
-                                className="text-sm text-green-700 underline"
-                              >
-                                {isSelected(wine.id) ? "✓ Remove" : "+ Add to Tasting"}
+                                className="text-sm text-green-700 underline">
+                                {isSelected(wine.id)
+                                  ? "✓ Remove"
+                                  : "+ Add to Tasting"}
                               </button>
                             </div>
                           </summary>
                           <div className="px-4 py-2 text-sm text-gray-700">
                             <img
-                              src={wine.wineLabelPhoto || "https://via.placeholder.com/100"}
+                              src={
+                                wine.wineLabelPhoto ||
+                                "https://via.placeholder.com/100"
+                              }
                               alt="wine label"
                               className="mb-2 w-24 h-24 object-cover rounded"
                             />
-                            <p><strong>Grape Origin:</strong> {wine.grapeOrigin}</p>
-                            <p><strong>Sweetness:</strong> {wine.sweetness}</p>
-                            <p><strong>Year:</strong> {wine.year}</p>
-                            <p><strong>Location Name:</strong> {wine.locationName}</p>
+                            <p>
+                              <strong>Grape Origin:</strong> {wine.grapeOrigin}
+                            </p>
+                            <p>
+                              <strong>Sweetness:</strong> {wine.sweetness}
+                            </p>
+                            <p>
+                              <strong>Year:</strong> {wine.year}
+                            </p>
+                            <p>
+                              <strong>Location Name:</strong>{" "}
+                              {wine.locationName}
+                            </p>
                           </div>
                         </details>
                       ))}

@@ -1,15 +1,38 @@
-import React, { useState } from "react";
+// src/components/user/review/singleEntry/WineReview.jsx
+
+import React, { useState, useEffect } from "react";
 import RatingStars from "../../../shared/forms/reviews/details/RatingStars";
 import TastingTags from "../../../shared/forms/reviews/details/TastingTags";
 import WouldBuyAgainToggle from "../../../shared/forms/reviews/details/WouldBuyToggle";
 
-export default function WineReview({ wine }) {
+export default function WineReview({ wine, onComplete }) {
   const [rating, setRating] = useState(0);
   const [notes, setNotes] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [wouldBuyAgain, setWouldBuyAgain] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  // 🛠 After "Thanks for your review!" shows, auto-call onComplete
+  useEffect(() => {
+    if (submitted) {
+      const timer = setTimeout(() => {
+        if (onComplete) {
+          const reviewData = {
+            wineId: wine.id,
+            name: wine.name,
+            rating,
+            notes,
+            selectedTags,
+            wouldBuyAgain,
+          };
+          onComplete(reviewData);
+        }
+      }, 2000); // Wait 2 seconds after "Thanks!" screen
+
+      return () => clearTimeout(timer);
+    }
+  }, [submitted, onComplete, wine, rating, notes, selectedTags, wouldBuyAgain]);
 
   if (!wine) {
     return (
@@ -25,16 +48,6 @@ export default function WineReview({ wine }) {
   };
 
   const handleConfirmSave = () => {
-    const reviewData = {
-      wineId: wine.id,
-      name: wine.name,
-      rating,
-      notes,
-      selectedTags,
-      wouldBuyAgain,
-    };
-
-    console.log("Review Submitted:", reviewData);
     setSubmitted(true);
     setShowConfirmModal(false);
   };
@@ -49,7 +62,7 @@ export default function WineReview({ wine }) {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-2xl mx-auto bg-white p-6 rounded-3xl shadow-xl space-y-8">
         {submitted ? (
-          <div className="text-center text-pink-700 mt-10">
+          <div className="text-center text-pink-700 mt-10 animate-fade-in">
             <h2 className="text-3xl font-bold mb-4">Thanks for your review! 🍷</h2>
             <p className="italic text-gray-600">Your tasting notes have been saved.</p>
           </div>
@@ -97,7 +110,6 @@ export default function WineReview({ wine }) {
                 Tasting Tags
               </label>
 
-              {/* 🎯 Wrap TastingTags in a soft gray box */}
               <div className="bg-gray-100 p-4 rounded-xl">
                 <TastingTags
                   selectedTags={selectedTags}
