@@ -6,25 +6,24 @@ import WineCard from "../../cards/WineCard";
 import WineReview from "../../../user/review/singleEntry/WineReview";
 
 export default function WineShowdownForm({ selectedWines }) {
-  const [phase, setPhase] = useState("review");
-  const [wantsToReview, setWantsToReview] = useState(null);
   const [placements, setPlacements] = useState({});
   const [reviews, setReviews] = useState({});
   const [currentWineIndex, setCurrentWineIndex] = useState(null);
+  const [wantsToReview, setWantsToReview] = useState(null);
   const [showReviewChoiceModal, setShowReviewChoiceModal] = useState(false);
   const [isReviewing, setIsReviewing] = useState(false);
-  const [selectedWineId, setSelectedWineId] = useState(null);
 
   const winesLeft = selectedWines.length - Object.keys(placements).length;
   const allDone = winesLeft === 0;
 
   const availablePlacements = () => {
-    return Array.from({ length: selectedWines.length }, (_, i) => i + 1)
-      .filter((place) => !Object.values(placements).includes(place));
+    const usedPlaces = Object.values(placements);
+    return Array.from({ length: selectedWines.length }, (_, i) => i + 1).filter(
+      (num) => !usedPlaces.includes(num)
+    );
   };
 
-  const handleWineClick = (wineId, index) => {
-    setSelectedWineId(wineId);
+  const handleWineClick = (index) => {
     setCurrentWineIndex(index);
 
     if (wantsToReview === null) {
@@ -46,13 +45,19 @@ export default function WineShowdownForm({ selectedWines }) {
 
   const handleAssignPlacement = (placementNumber) => {
     const wineId = selectedWines[currentWineIndex]?.id;
-    setPlacements((prev) => ({
-      ...prev,
-      [wineId]: placementNumber,
-    }));
+    setPlacements((prev) => {
+      // Remove previous wine that had this placement
+      const updated = { ...prev };
+      for (const id in updated) {
+        if (updated[id] === placementNumber) {
+          delete updated[id];
+        }
+      }
+      updated[wineId] = placementNumber;
+      return updated;
+    });
 
     if (!wantsToReview) {
-      setSelectedWineId(null);
       setCurrentWineIndex(null);
     } else {
       setIsReviewing(true);
@@ -66,7 +71,6 @@ export default function WineShowdownForm({ selectedWines }) {
       [wineId]: reviewData,
     }));
     setIsReviewing(false);
-    setSelectedWineId(null);
     setCurrentWineIndex(null);
   };
 
@@ -94,7 +98,7 @@ export default function WineShowdownForm({ selectedWines }) {
 
       {/* Podium View */}
       {(firstPlace || secondPlace || thirdPlace) && (
-        <div className="flex justify-center items-end gap-6 mb-8 animate-bounce-small">
+        <div className="flex justify-center items-end gap-6 mb-8">
           {secondPlace && (
             <div className="flex flex-col items-center">
               <span className="text-2xl">🥈</span>
@@ -116,28 +120,24 @@ export default function WineShowdownForm({ selectedWines }) {
         </div>
       )}
 
-      {/* Stacked Card Deck */}
-      <div className="relative w-full h-[500px] mt-10">
+      {/* Horizontal Card Deck */}
+      <div className="overflow-x-scroll flex space-x-6 py-6 px-2">
         {selectedWines.map((wine, index) => {
-          const alreadyRanked = placements[wine.id];
+          const wineId = wine.id;
+          const isRanked = placements[wineId];
+
           return (
             <div
-              key={wine.id}
-              className={`absolute left-0 right-0 mx-auto w-72 transition-all duration-500 ease-in-out
-                ${selectedWineId === wine.id ? "scale-105 z-50" : `z-${30 - index} top-[${index * 10}px]`}
-                ${alreadyRanked ? "bg-green-100 opacity-80 translate-y-[-20px]" : "bg-white"}
-                ${alreadyRanked ? "transition-transform transition-opacity" : ""}
-                rounded-xl shadow-lg cursor-pointer`}
-              style={{
-                top: `${index * 10}px`,
-                zIndex: 50 - index,
-              }}
-              onClick={() => handleWineClick(wine.id, index)}
+              key={wineId}
+              className={`min-w-[250px] p-2 rounded-xl shadow-lg transition-all duration-300
+                ${isRanked ? "bg-green-100 opacity-80" : "bg-white"}
+                hover:scale-105 cursor-pointer`}
+              onClick={() => handleWineClick(index)}
             >
               <WineCard wineData={wine} index={index} />
-              {alreadyRanked && (
-                <div className="absolute bottom-2 left-2 bg-rose-700 text-white text-xs font-bold px-2 py-1 rounded">
-                  {placements[wine.id]} Place
+              {isRanked && (
+                <div className="absolute top-2 left-2 bg-rose-700 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                  {placements[wineId]} Place
                 </div>
               )}
             </div>
@@ -146,7 +146,7 @@ export default function WineShowdownForm({ selectedWines }) {
       </div>
 
       {/* Placement Modal */}
-      {selectedWineId && !isReviewing && !placements[selectedWines[currentWineIndex]?.id] && (
+      {currentWineIndex !== null && !isReviewing && !placements[selectedWines[currentWineIndex]?.id] && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl max-w-sm w-full space-y-4 text-center">
             <h2 className="text-xl font-bold">Rank this Wine</h2>
@@ -198,7 +198,7 @@ export default function WineShowdownForm({ selectedWines }) {
       )}
 
       {/* Review Modal */}
-      {isReviewing && selectedWineId && (
+      {isReviewing && currentWineIndex !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl max-w-sm w-full relative">
             <WineReview
@@ -209,14 +209,14 @@ export default function WineShowdownForm({ selectedWines }) {
         </div>
       )}
 
-      {/* Submit Button */}
+      {/* Submit Rankings */}
       {allDone && (
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-10">
           <button
-            onClick={() => alert("Submit Rankings! 🎯")}
-            className="px-6 py-3 bg-green-700 text-white rounded-full font-semibold hover:bg-green-600 transition"
+            onClick={() => alert("🎉 Rankings Submitted!")}
+            className="px-6 py-3 bg-green-700 text-white font-bold rounded-full hover:bg-green-600 transition"
           >
-            ✅ Submit My Final Rankings!
+            ✅ Submit My Final Rankings
           </button>
         </div>
       )}
